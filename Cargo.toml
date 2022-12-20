@@ -1,0 +1,12 @@
+[package]
+name = "sqlite-ulid"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sqlite-loadable = "0.0.3"
+ulid = "1.0.0"
+
+[lib]
+crate-type=["cdylib"]
+name="ulid0"
