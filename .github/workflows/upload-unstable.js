@@ -25,9 +25,9 @@ module.exports = async ({ github, context }) => {
     });
   }
   await Promise.all([
-    uploadReleaseAsset("sqlite-xsv-ubuntu/ulid0.so", "xsv0.so"),
-    uploadReleaseAsset("sqlite-xsv-macos/ulid0.dylib", "xsv0.dylib"),
-    uploadReleaseAsset("sqlite-xsv-windows/ulid0.dll", "xsv0.dll"),
+    uploadReleaseAsset("sqlite-ulid-ubuntu/ulid0.so", "ulid0.so"),
+    uploadReleaseAsset("sqlite-ulid-macos/ulid0.dylib", "ulid0.dylib"),
+    uploadReleaseAsset("sqlite-ulid-windows/ulid0.dll", "ulid0.dll"),
   ]);
 
   return;
