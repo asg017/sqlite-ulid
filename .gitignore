@@ -2,3 +2,4 @@
 /Cargo.lock
 uuid.c
 *.dylib
+dist/
