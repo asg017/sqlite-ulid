@@ -23,12 +23,12 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make release
+      - run: make loadable
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: sqlite-ulid-ubuntu
-          path: dist/release/ulid0.so
+          path: dist/debug/ulid0.so
   test-macos:
     name: Testing macos-latest
     runs-on: macos-latest
@@ -46,12 +46,12 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make release
+      - run: make loadable
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: sqlite-ulid-macos
-          path: dist/release/ulid0.dylib
+          path: dist/debug/ulid0.dylib
   test-windows:
     name: Testing windows-latest
     runs-on: windows-latest
@@ -69,12 +69,12 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make release
+      - run: make loadable
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: sqlite-ulid-windows
-          path: dist/release/ulid0.dll
+          path: dist/debug/ulid0.dll
   upload:
     name: upload to unstable
     needs: [test-macos, test-ubuntu, test-windows]

@@ -60,6 +60,7 @@ sqlite-ulid.h: cbindgen.toml
 release: $(TARGET_LOADABLE_RELEASE) $(TARGET_STATIC_RELEASE)
 
 loadable: $(TARGET_LOADABLE)
+loadable-release: $(TARGET_LOADABLE_RELEASE)
 static: $(TARGET_STATIC)
 debug: loadable static
 
