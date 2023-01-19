@@ -7,10 +7,10 @@ permissions:
   contents: read
 jobs:
   test-ubuntu:
-    name: Testing ubuntu-latest
-    runs-on: ubuntu-latest
+    name: Testing ubuntu-20.04
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: |
@@ -25,7 +25,7 @@ jobs:
           toolchain: stable
       - run: make loadable
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/ulid0.so
@@ -33,7 +33,7 @@ jobs:
     name: Testing macos-latest
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: |
@@ -47,16 +47,42 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
+      #- run: make test
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos
+          path: dist/debug/ulid0.dylib
+  test-macos-arm:
+    name: Testing macos-latest with arm
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: rustup target add aarch64-apple-darwin
+      - run: make target=aarch64-apple-darwin loadable
+      #- run: make test
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
   test-windows:
     name: Testing windows-latest
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: |
@@ -70,24 +96,9 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
+      #- run: make test
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows
           path: dist/debug/ulid0.dll
-  upload:
-    name: upload to unstable
-    needs: [test-macos, test-ubuntu, test-windows]
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Download workflow artifacts
-        uses: actions/download-artifact@v2
-      - uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const script = require('.github/workflows/upload-unstable.js')
-            await script({github, context})
