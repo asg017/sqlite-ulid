@@ -23,16 +23,16 @@ function targz(files) {
       console.log("targz close");
     });
 
-    archive.on("finish", () => {
-      console.log("archive finish");
-      resolve(output.read());
-    });
-
     archive.pipe(output);
     for (const file of files) {
       archive.append(file.data, { name: file.name });
     }
-    archive.finalize().then(() => console.log("finalize?"));
+    archive.finalize();
+
+    archive.on("finish", () => {
+      console.log("archive finish");
+      resolve(output.read());
+    });
   });
 }
 
