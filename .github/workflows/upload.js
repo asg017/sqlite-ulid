@@ -1,4 +1,34 @@
 const fs = require("fs").promises;
+const crypto = require("crypto");
+const archiver = require("archiver");
+const stream = require("stream");
+
+function targz(files) {
+  return new Promise((resolve, reject) => {
+    const output = new stream.PassThrough();
+    const archive = archiver("tar", {
+      gzip: true,
+      gzipOptions: {
+        level: 1,
+      },
+    });
+
+    output.on("close", () => {});
+    output.on("error", reject);
+
+    archive.pipe(output);
+    for (const file of files) {
+      archive.append(file.data, { name: file.name });
+    }
+
+    archive.finalize();
+    archive.on("error", reject);
+
+    archive.on("finish", () => {
+      resolve(output.read());
+    });
+  });
+}
 
 module.exports = async ({ github, context }) => {
   const {
@@ -11,34 +41,85 @@ module.exports = async ({ github, context }) => {
     repo,
     tag: process.env.GITHUB_REF.replace("refs/tags/", ""),
   });
+  console.log("release id: ", release.data.id);
 
   const release_id = release.data.id;
-  async function uploadReleaseAsset(path, name) {
-    console.log("Uploading", name, "at", path);
 
-    return github.rest.repos.uploadReleaseAsset({
-      owner,
-      repo,
-      release_id,
-      name,
-      data: await fs.readFile(path),
-    });
-  }
-  await Promise.all([
-    uploadReleaseAsset("sqlite-ulid-ubuntu/ulid0.so", "linux-x86_64-ulid0.so"),
-    uploadReleaseAsset(
-      "sqlite-ulid-macos/ulid0.dylib",
-      "macos-x86_64-ulid0.dylib"
-    ),
-    uploadReleaseAsset(
-      "sqlite-ulid-macos-arm/ulid0.dylib",
-      "macos-arm-ulid0.dylib"
-    ),
-    uploadReleaseAsset(
-      "sqlite-ulid-windows/ulid0.dll",
-      "windows-x86_64-ulid0.dll"
-    ),
-  ]);
+  const compiled_extensions = [
+    {
+      name: "ulid0.so",
+      path: "sqlite-ulid-ubuntu/ulid0.so",
+      asset_name: "sqlite-ulid-vTODO-ubuntu-x86_64.tar.gz",
+    },
+    /*{
+      name: "ulid0.dylib",
+      path: "sqlite-ulid-macos/ulid0.dylib",
+    },
+    {
+      name: "ulid0.dylib",
+      path: "sqlite-ulid-macos-arm/ulid0.dylib",
+    },
+    {
+      name: "ulid0.dll",
+      path: "sqlite-ulid-windows/ulid0.dll",
+    },*/
+  ];
+  console.log(compiled_extensions);
 
+  let extension_assets = await Promise.all(
+    compiled_extensions.map(async (d) => {
+      const extensionContents = await fs.readFile(d.path);
+      const ext_sha256 = crypto
+        .createHash("sha256")
+        .update(extensionContents)
+        .digest("hex");
+      const tar = await targz([{ name: d.name, data: extensionContents }]);
+
+      const tar_md5 = crypto.createHash("md5").update(tar).digest("base64");
+      const tar_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
+      return {
+        ext_sha256,
+        tar_md5,
+        tar_sha256,
+        tar,
+        asset_name: d.asset_name,
+      };
+    })
+  );
+  console.log("assets length: ", extension_assets.length);
+  let checksum = {
+    extensions: Object.fromEntries(
+      extension_assets.map((d) => [
+        d.asset_name,
+        {
+          asset_sha265: d.tar_sha256,
+          asset_md5: d.tar_md5,
+          extension_sha256: d.ext_sha256,
+        },
+      ])
+    ),
+  };
+  console.log("checksum", checksum);
+
+  await github.rest.repos.uploadReleaseAsset({
+    owner,
+    repo,
+    release_id,
+    name: "spm.json",
+    data: JSON.stringify(checksum),
+  });
+
+  await Promise.all(
+    extension_assets.map(async (d) => {
+      console.log("uploading ", d.asset_name);
+      await github.rest.repos.uploadReleaseAsset({
+        owner,
+        repo,
+        release_id,
+        name: d.asset_name,
+        data: d.tar,
+      });
+    })
+  );
   return;
 };
