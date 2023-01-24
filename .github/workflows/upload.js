@@ -13,7 +13,9 @@ function targz(files) {
       },
     });
 
-    output.on("close", () => {});
+    output.on("close", () => {
+      console.log("targz close");
+    });
     output.on("error", reject);
 
     archive.pipe(output);
@@ -25,6 +27,7 @@ function targz(files) {
     archive.on("error", reject);
 
     archive.on("finish", () => {
+      console.log("archive finish");
       resolve(output.read());
     });
   });
@@ -73,10 +76,14 @@ module.exports = async ({ github, context }) => {
         .createHash("sha256")
         .update(extensionContents)
         .digest("hex");
+      console.log("ext_sha256", ext_sha256);
       const tar = await targz([{ name: d.name, data: extensionContents }]);
 
       const tar_md5 = crypto.createHash("md5").update(tar).digest("base64");
       const tar_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
+      console.log("tar_md5", tar_md5);
+      console.log("tar_sha256", tar_sha256);
+
       return {
         ext_sha256,
         tar_md5,
