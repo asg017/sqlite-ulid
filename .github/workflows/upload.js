@@ -16,23 +16,28 @@ function targz(files) {
 
     /**/
 
-    archive.on("error", reject);
-    output.on("error", reject);
+    output.on("close", function () {
+      console.log(archive.pointer() + " total bytes");
+      console.log(
+        "archiver has been finalized and the output file descriptor has closed."
+      );
+    });
 
-    output.on("close", () => {
-      console.log("targz close");
+    archive.on("error", function (err) {
+      throw err;
     });
 
     archive.pipe(output);
     for (const file of files) {
       archive.append(file.data, { name: file.name });
     }
-    archive.finalize();
 
     archive.on("finish", () => {
       console.log("archive finish");
       resolve(output.read());
     });
+
+    archive.finalize();
   });
 }
 
