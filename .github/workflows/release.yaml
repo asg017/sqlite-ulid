@@ -1,0 +1,118 @@
+name: "release"
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-ubuntu:
+    name: Build ubuntu-20.04
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: make loadable-release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlite-ulid-ubuntu
+          path: dist/release/ulid0.so
+  build-macos:
+    name: Build macos-latest
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: make loadable-release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlite-ulid-macos
+          path: dist/release/ulid0.dylib
+  build-macos-arm:
+    name: Build macos-latest with arm
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: rustup target add aarch64-apple-darwin
+      - run: make target=aarch64-apple-darwin loadable
+      #- run: make test
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm
+          path: dist/debug/ulid0.dylib
+  build-windows:
+    name: Build windows-latest
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: make loadable-release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlite-ulid-windows
+          path: dist/release/ulid0.dll
+  upload:
+    name: upload
+    needs: [build-macos, build-macos-arm, build-ubuntu, build-windows]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v2
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const script = require('.github/workflows/upload.js')
+            await script({github, context})

@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 sqlite-loadable = "0.0.5"
 ulid = "1.0.0"
+chrono = "0.4.23"
 
 [lib]
 crate-type=["lib", "staticlib", "cdylib"]
