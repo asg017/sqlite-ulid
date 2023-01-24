@@ -5,6 +5,7 @@ const stream = require("stream");
 
 function targz(files) {
   return new Promise((resolve, reject) => {
+    console.log("targz files: ", files[0].name, files[1]);
     const output = new stream.PassThrough();
     const archive = archiver("tar", {
       gzip: true,
@@ -23,7 +24,7 @@ function targz(files) {
       archive.append(file.data, { name: file.name });
     }
 
-    archive.finalize();
+    archive.finalize().then(() => console.log("finalize?"));
     archive.on("error", reject);
 
     archive.on("finish", () => {
