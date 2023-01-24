@@ -14,10 +14,7 @@ function targz(files) {
       },
     });
 
-    output.on("close", () => {
-      console.log("targz close");
-    });
-    output.on("error", reject);
+    /**/
 
     archive.pipe(output);
     for (const file of files) {
@@ -26,6 +23,10 @@ function targz(files) {
 
     archive.finalize().then(() => console.log("finalize?"));
     archive.on("error", reject);
+    output.on("error", reject);
+    output.on("close", () => {
+      console.log("targz close");
+    });
 
     archive.on("finish", () => {
       console.log("archive finish");
