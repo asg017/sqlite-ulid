@@ -16,15 +16,10 @@ function targz(files) {
 
     /**/
 
-    archive.pipe(output);
-    for (const file of files) {
-      archive.append(file.data, { name: file.name });
-    }
-
     archive.on("error", reject);
     output.on("error", reject);
+
     output.on("close", () => {
-      resolve(output.read());
       console.log("targz close");
     });
 
@@ -32,6 +27,11 @@ function targz(files) {
       console.log("archive finish");
       resolve(output.read());
     });
+
+    archive.pipe(output);
+    for (const file of files) {
+      archive.append(file.data, { name: file.name });
+    }
     archive.finalize().then(() => console.log("finalize?"));
   });
 }
