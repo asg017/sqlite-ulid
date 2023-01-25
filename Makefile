@@ -31,12 +31,12 @@ TARGET_STATIC_RELEASE=$(prefix)/release/ulid0.a
 
 ifdef target
 CARGO_TARGET=--target=$(target)
-BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_jsonschema.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_jsonschema.$(LOADABLE_EXTENSION)
+BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
+BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 else 
 CARGO_TARGET=
-BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_jsonschema.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_jsonschema.$(LOADABLE_EXTENSION)
+BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
+BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 endif
 
 $(prefix):
