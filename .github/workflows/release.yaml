@@ -23,12 +23,12 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make loadable
+      - run: make loadable-release
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: sqlite-ulid-ubuntu
-          path: dist/debug/ulid0.so
+          path: dist/release/ulid0.so
   build-macos:
     name: Build macos-latest
     runs-on: macos-latest
