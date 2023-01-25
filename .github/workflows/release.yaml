@@ -30,7 +30,6 @@ jobs:
           name: sqlite-ulid-ubuntu
           path: dist/debug/ulid0.so
   build-macos:
-    if: false
     name: Build macos-latest
     runs-on: macos-latest
     steps:
@@ -54,7 +53,6 @@ jobs:
           name: sqlite-ulid-macos
           path: dist/release/ulid0.dylib
   build-macos-arm:
-    if: false
     name: Build macos-latest with arm
     runs-on: macos-latest
     steps:
@@ -80,7 +78,6 @@ jobs:
           name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
   build-windows:
-    if: false
     name: Build windows-latest
     runs-on: windows-latest
     steps:
@@ -105,8 +102,7 @@ jobs:
           path: dist/release/ulid0.dll
   upload:
     name: upload
-    #needs: [build-macos, build-macos-arm, build-ubuntu, build-windows]
-    needs: [build-ubuntu]
+    needs: [build-macos, build-macos-arm, build-ubuntu, build-windows]
     permissions:
       contents: write
     runs-on: ubuntu-latest

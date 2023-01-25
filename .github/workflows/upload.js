@@ -44,27 +44,30 @@ module.exports = async ({ github, context }) => {
     tag: process.env.GITHUB_REF.replace("refs/tags/", ""),
   });
   console.log("release id: ", release.data.id);
-
+  const VERSION = process.env.GITHUB_REF_NAME;
   const release_id = release.data.id;
 
   const compiled_extensions = [
     {
       name: "ulid0.so",
       path: "sqlite-ulid-ubuntu/ulid0.so",
-      asset_name: "sqlite-ulid-vTODO-ubuntu-x86_64.tar.gz",
+      asset_name: `sqlite-ulid-${VERSION}-ubuntu-x86_64.tar.gz`,
     },
-    /*{
+    {
       name: "ulid0.dylib",
       path: "sqlite-ulid-macos/ulid0.dylib",
+      asset_name: `sqlite-ulid-${VERSION}-macos-x86_64.tar.gz`,
     },
     {
       name: "ulid0.dylib",
       path: "sqlite-ulid-macos-arm/ulid0.dylib",
+      asset_name: `sqlite-ulid-${VERSION}-macos-arm64.tar.gz`,
     },
     {
       name: "ulid0.dll",
       path: "sqlite-ulid-windows/ulid0.dll",
-    },*/
+      asset_name: `sqlite-ulid-${VERSION}-windows-x86_64.tar.gz`,
+    },
   ];
   console.log(compiled_extensions);
 
