@@ -3,3 +3,4 @@
 uuid.c
 *.dylib
 dist/
+.vscode

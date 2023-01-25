@@ -1,43 +1,34 @@
 const fs = require("fs").promises;
 const crypto = require("crypto");
-const archiver = require("archiver");
-const stream = require("stream");
+const zlib = require("zlib");
+const tar = require("tar-fs");
 
 function targz(files) {
   return new Promise((resolve, reject) => {
     console.log("targz files: ", files[0].name, files[0]);
-    const output = new stream.PassThrough();
-    const archive = archiver("tar", {
-      gzip: true,
-      gzipOptions: {
-        level: 1,
-      },
-    });
 
-    /**/
+    const tarStream = tar.pack();
 
-    output.on("close", function () {
-      console.log(archive.pointer() + " total bytes");
-      console.log(
-        "archiver has been finalized and the output file descriptor has closed."
-      );
-    });
-
-    archive.on("error", function (err) {
-      throw err;
-    });
-
-    archive.pipe(output);
     for (const file of files) {
-      archive.append(file.data, { name: file.name });
+      tarStream.entry({ name: file.name }, file.data);
     }
 
-    archive.on("finish", () => {
-      console.log("archive finish");
-      resolve(output.read());
-    });
+    tarStream.finalize();
 
-    archive.finalize();
+    const gzip = zlib.createGzip();
+
+    const chunks = [];
+    tarStream
+      .pipe(gzip)
+      .on("data", (chunk) => {
+        chunks.push(chunk);
+      })
+      .on("end", () => {
+        const buffer = Buffer.concat(chunks);
+        console.log(buffer);
+        resolve(buffer);
+      })
+      .on("error", reject);
   });
 }
 
@@ -77,7 +68,7 @@ module.exports = async ({ github, context }) => {
   ];
   console.log(compiled_extensions);
 
-  let extension_assets = await Promise.all(
+  const extension_assets = await Promise.all(
     compiled_extensions.map(async (d) => {
       const extensionContents = await fs.readFile(d.path);
       const ext_sha256 = crypto
@@ -86,6 +77,7 @@ module.exports = async ({ github, context }) => {
         .digest("hex");
       console.log("ext_sha256", ext_sha256);
       const tar = await targz([{ name: d.name, data: extensionContents }]);
+      console.log("tar", tar);
 
       const tar_md5 = crypto.createHash("md5").update(tar).digest("base64");
       const tar_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
@@ -102,7 +94,7 @@ module.exports = async ({ github, context }) => {
     })
   );
   console.log("assets length: ", extension_assets.length);
-  let checksum = {
+  const checksum = {
     extensions: Object.fromEntries(
       extension_assets.map((d) => [
         d.asset_name,
