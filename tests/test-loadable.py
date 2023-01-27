@@ -32,6 +32,9 @@ def execute_all(cursor, sql, args=None):
   results = cursor.execute(sql, args).fetchall()
   return list(map(lambda x: dict(x), results))
 
+def spread_args(args):                                                          
+  return ",".join(['?'] * len(args))
+  
 FUNCTIONS = [
   'ulid',
   'ulid',
@@ -65,14 +68,22 @@ class TestUlid(unittest.TestCase):
     self.assertEqual(len(debug), 3)
   
   def test_ulid(self):
-    ulid = lambda: db.execute("select ulid()").fetchone()[0]
+    ulid = lambda *args: db.execute(f"select ulid({spread_args(args)})", args).fetchone()[0]
     self.assertEqual(len(ulid()), 26)
     self.assertEqual(type(ulid()), str)
+    
+    self.assertEqual(len(ulid(b'\x01\x85\xe5\xb1\xc5\xe9\xfb\xa7\xf5\xcfSJ\x13\xe4.\xa3')), 26)
+    self.assertEqual(type(ulid(b'\x01\x85\xe5\xb1\xc5\xe9\xfb\xa7\xf5\xcfSJ\x13\xe4.\xa3')), str)
+    
   
   def test_ulid_bytes(self):
-    ulid_bytes = lambda: db.execute("select ulid_bytes()").fetchone()[0]
+    ulid_bytes = lambda *args: db.execute(f"select ulid_bytes({spread_args(args)})", args).fetchone()[0]
+    
     self.assertEqual(len(ulid_bytes()), 16)
     self.assertEqual(type(ulid_bytes()), bytes)
+    
+    self.assertEqual(len(ulid_bytes('01gqqt4x43d7k0x3n5jpqhh2qd')), 16)
+    self.assertEqual(type(ulid_bytes('01gqqt4x43d7k0x3n5jpqhh2qd')), bytes)
   
   def test_ulid_with_prefix(self):
     ulid_with_prefix = lambda prefix: db.execute("select ulid_with_prefix(?)", [prefix]).fetchone()[0]
@@ -80,9 +91,10 @@ class TestUlid(unittest.TestCase):
   
   def test_ulid_datetime(self):
     ulid_datetime = lambda ulid: db.execute("select ulid_datetime(?)", [ulid]).fetchone()[0]
-    self.assertEqual(ulid_datetime('01GMP2G8ZG6PMKWYVKS62TTA41'), 1671483106288)
+    self.assertEqual(ulid_datetime('01GMP2G8ZG6PMKWYVKS62TTA41'), '2022-12-19 20:51:46.288')
+    self.assertEqual(ulid_datetime('u_01gqqt6dz6p00680vw747t8vs5'), '2023-01-26 19:52:09.446')
     #self.assertEqual(ulid_datetime(b'0185d0c5362761312e0483e4c9e3ec5d'), 1671483106288)
-    self.assertEqual(ulid_datetime(b'\x01\x85\xe5\xb1\xc5\xe9\xfb\xa7\xf5\xcfSJ\x13\xe4.\xa3'), 1674595911145)
+    self.assertEqual(ulid_datetime(b'\x01\x85\xe5\xb1\xc5\xe9\xfb\xa7\xf5\xcfSJ\x13\xe4.\xa3'), '2023-01-24 21:31:51.145')
   
   
 
