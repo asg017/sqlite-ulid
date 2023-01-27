@@ -26,7 +26,6 @@ Source: {}
 }
 
 // ulid() -> '01GMRG9JWFHHCGG5TSXHWYR0CM'
-// TODO maybe `ulid(blob)` to pretty format?
 pub fn ulid(context: *mut sqlite3_context, values: &[*mut sqlite3_value]) -> Result<()> {
     let ulid = if let Some(input) = values.get(0) {
         Ulid(u128::from_be_bytes(
@@ -59,7 +58,7 @@ pub fn ulid_with_prefix(
 pub fn ulid_bytes(context: *mut sqlite3_context, values: &[*mut sqlite3_value]) -> Result<()> {
     let ulid = if let Some(input) = values.get(0) {
         Ulid::from_string(api::value_text(input)?).map_err(|e| {
-            Error::new_message(format!("invalid ULID input to ulid_datetime(): {}", e).as_str())
+            Error::new_message(format!("invalid ULID input to ulid_bytes(): {}", e).as_str())
         })?
     } else {
         Ulid::new()
