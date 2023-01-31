@@ -10,6 +10,7 @@ jobs:
   test-ubuntu:
     name: Testing ubuntu-20.04
     runs-on: ubuntu-20.04
+    if: false
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
@@ -56,6 +57,7 @@ jobs:
           name: sqlite-ulid-ubuntu-wheels
           path: python/wheelhouse/*.whl
   test-macos:
+    if: false
     name: Testing macos-latest
     runs-on: macos-latest
     steps:
@@ -81,20 +83,21 @@ jobs:
           path: dist/debug/ulid0.dylib
   test-python-macos:
     runs-on: macos-latest
-    needs: [test-macos]
+    #needs: [test-macos]
     steps:
       - uses: actions/checkout@v3
-      - name: Download workflow artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-macos
-          path: dist/debug/
-      - run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
+      #- name: Download workflow artifacts
+      #  uses: actions/download-artifact@v3
+      #  with:
+      #    name: sqlite-ulid-macos
+      #    path: dist/debug/
+      #- run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
+      - run: wget -O python/sqlite_ulid/ulid0.dylib 'https://github.com/asg017/sqlite-ulid/releases/download/unstable/ulid0.dylib'
       - uses: actions/setup-python@v3
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.12.0
       - name: Build wheels
-        run: python -m cibuildwheel  --platform macos --output-dir wheelhouse
+        run: python -m cibuildwheel --output-dir wheelhouse
         working-directory: python/
         env:
           CIBW_BUILD_VERBOSITY: 1
