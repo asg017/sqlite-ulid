@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 import platform
 
-VERSION = "0.0.1-TODO.1"
+VERSION = "0.0.1"
 
 def determine_package_data():
   machine = platform.machine()
