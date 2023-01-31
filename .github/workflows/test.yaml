@@ -51,6 +51,7 @@ jobs:
         working-directory: python/
         env:
           CIBW_BUILD_VERBOSITY: 1
+          CIBW_REPAIR_WHEEL_COMMAND: ""
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
