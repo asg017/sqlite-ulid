@@ -104,7 +104,8 @@ jobs:
       #    CIBW_REPAIR_WHEEL_COMMAND: ""
       #    CIBW_SKIP: "arm64"
       - run: pip wheel . -w wheelhouse
-      - run: find wheelhouse
+        working-directory: python/
+      - run: find python
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-wheels
