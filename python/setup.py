@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, Extension
 import os
 import platform
 
@@ -41,6 +41,7 @@ setup(
     packages=["sqlite_ulid"],
     package_data={"sqlite_ulid": package_data},
     install_requires=[],
+    ext_modules=[Extension("", [])],
     extras_require={"test": ["pytest"]},
     python_requires=">=3.9",
 )
