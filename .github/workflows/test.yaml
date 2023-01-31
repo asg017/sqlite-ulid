@@ -49,6 +49,8 @@ jobs:
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         working-directory: python/
+        env:
+          CIBW_BUILD_VERBOSITY: 1
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
