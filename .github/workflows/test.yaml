@@ -103,6 +103,7 @@ jobs:
       #    CIBW_BUILD_VERBOSITY: 1
       #    CIBW_REPAIR_WHEEL_COMMAND: ""
       #    CIBW_SKIP: "arm64"
+      - run: pip install wheel
       - run: pip wheel . -w wheelhouse
         working-directory: python/
       - run: find python
