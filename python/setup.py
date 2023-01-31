@@ -10,7 +10,7 @@ def determine_package_data():
 
   if system == 'Darwin':
     if machine == 'x86_64':
-      return ["../ulid0.dylib"]
+      return ["./ulid0.dylib"]
     raise Exception("unsupported platform")  
   elif system == 'Linux':
     if machine == 'x86_64':
