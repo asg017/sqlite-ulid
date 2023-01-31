@@ -33,25 +33,21 @@ jobs:
           path: dist/debug/ulid0.so
   test-python-ubuntu:
     runs-on: ubuntu-20.04
-    needs: [test-ubuntu]
+    #needs: [test-ubuntu]
     steps:
       - uses: actions/checkout@v3
-      - name: Download workflow artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-ubuntu
-          path: dist/debug/
-      - run: cp dist/debug/ulid0.so python/sqlite_ulid/
+      #- name: Download workflow artifacts
+      #  uses: actions/download-artifact@v3
+      #  with:
+      #    name: sqlite-ulid-ubuntu
+      #    path: dist/debug/
+      #- run: cp dist/debug/ulid0.so python/sqlite_ulid/
+      - run: wget -O python/sqlite_ulid/ulid0.dylib 'https://github.com/asg017/sqlite-ulid/releases/download/unstable/ulid0.dylib'
       - uses: actions/setup-python@v3
-      - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==2.12.0
-      - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
+      - run: pip install wheel
+      - run: pip wheel . -w wheelhouse
         working-directory: python/
-        env:
-          CIBW_BUILD_VERBOSITY: 1
-          CIBW_REPAIR_WHEEL_COMMAND: ""
-          CIBW_BUILD: "*x86_64*"
+      - run: find python/
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
