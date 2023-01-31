@@ -41,7 +41,7 @@ setup(
     packages=["sqlite_ulid"],
     package_data={"sqlite_ulid": package_data},
     install_requires=[],
-    ext_modules=[Extension("", [])],
+    ext_modules=[Extension("", [], optional=True)],
     extras_require={"test": ["pytest"]},
     python_requires=">=3.9",
 )
