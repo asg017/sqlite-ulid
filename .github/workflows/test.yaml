@@ -35,6 +35,7 @@ jobs:
     runs-on: ubuntu-20.04
     #needs: [test-ubuntu]
     steps:
+      - uses: actions/checkout@v3
       - run: mkdir -p dist/debug
       - run: wget -O dist/debug/ulid.so 'https://github.com/asg017/sqlite-ulid/releases/download/unstable/ulid0.so'
       #- name: Download workflow artifacts
