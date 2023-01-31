@@ -17,7 +17,8 @@ def determine_package_data():
       return ["./ulid0.so"]
     raise Exception("unsupported platform")
   elif system == 'Windows':
-    raise Exception("unsupported platform")
+    # TODO check machine?
+    return ["./ulid0.dll"]
   else: 
     raise Exception("unsupported platform")
 
