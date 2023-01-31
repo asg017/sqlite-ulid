@@ -11,9 +11,10 @@ def determine_package_data():
   if system == 'Darwin':
     if machine == 'x86_64':
       return ["../ulid0.dylib"]
-    else:
-      raise Exception("unsupported platform")  
+    raise Exception("unsupported platform")  
   elif system == 'Linux':
+    if machine == 'x86_64':
+      return ["../ulid0.so"]
     raise Exception("unsupported platform")
   elif system == 'Windows':
     raise Exception("unsupported platform")
@@ -41,5 +42,5 @@ setup(
     package_data={"sqlite_ulid": package_data},
     install_requires=[],
     extras_require={"test": ["pytest"]},
-    python_requires=">=3.7",
+    python_requires=">=3.9",
 )

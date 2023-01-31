@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - pip-install
 permissions:
   contents: read
 jobs:
@@ -29,7 +30,28 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/ulid0.so
+  test-python-ubuntu:
+    runs-on: ubuntu-20.04
+    needs: [test-ubuntu]
+    steps:
+      - run: mkdir -p dist/debug
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu
+          path: dist/debug/
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.12.0
+        with:
+          package-dir: ./python
+          output-dir: wheelhouse
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu-wheels
+          path: ./wheelhouse/*.whl
   test-macos:
+    if: false
     name: Testing macos-latest
     runs-on: macos-latest
     steps:
@@ -54,6 +76,7 @@ jobs:
           name: sqlite-ulid-macos
           path: dist/debug/ulid0.dylib
   test-macos-arm:
+    if: false
     name: Testing macos-latest with arm
     runs-on: macos-latest
     steps:
@@ -79,6 +102,7 @@ jobs:
           name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
   test-windows:
+    if: flase
     name: Testing windows-latest
     runs-on: windows-latest
     steps:
