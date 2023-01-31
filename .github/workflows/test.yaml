@@ -99,7 +99,7 @@ jobs:
         env:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_REPAIR_WHEEL_COMMAND: ""
-          CIBW_BUILD: "*x86_64*"
+          CIBW_SKIP: "arm64"
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-wheels
