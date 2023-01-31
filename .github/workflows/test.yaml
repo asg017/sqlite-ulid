@@ -47,7 +47,7 @@ jobs:
       - run: pip install wheel
       - run: pip wheel . -w wheelhouse
         working-directory: python/
-      - run: find python/
+      - run: mv python/wheelhouse/sqlite_ulid-0.0.1-cp311-cp311-linux_x86_64.whl python/wheelhouse/sqlite_ulid-0.0.1-py3-none-linux_x86_64.whl
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
