@@ -63,7 +63,7 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: dist/debug/
-      - run: pip install --find-links dist/debug/
+      - run: pip install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable
       - run: make test-python
   build-macos:
@@ -124,7 +124,7 @@ jobs:
         with:
           name: sqlite-ulid-macos-wheels
           path: dist/debug/
-      - run: pip install --find-links dist/debug/
+      - run: pip install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable
       - run: make test-python
   build-macos-arm:
@@ -230,7 +230,7 @@ jobs:
         with:
           name: sqlite-ulid-windows-wheels
           path: dist/debug/
-      - run: pip install --find-links dist/debug/
+      - run: pip install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable
       - run: make test-python
   upload_test_pypi:
