@@ -158,6 +158,8 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
+      - run: brew install python
+      - run: alias python3="/usr/local/opt/python@3/libexec/bin/python"
       - run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
