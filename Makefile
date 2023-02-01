@@ -39,6 +39,12 @@ BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 endif
 
+ifdef python
+PYTHON=$(python)
+else
+PYTHON=python3
+endif
+
 $(prefix):
 	mkdir -p $(prefix)/debug
 	mkdir -p $(prefix)/release
@@ -69,6 +75,6 @@ clean:
 	cargo clean
 
 test:
-	python3 tests/test-loadable.py
+	$(PYTHON) tests/test-loadable.py
 
 .PHONY: clean test loadable static debug
