@@ -84,8 +84,6 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
-      - run: brew install python
-      - run: make python=/usr/local/opt/python@3/libexec/bin/python test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -124,9 +122,10 @@ jobs:
         with:
           name: sqlite-ulid-macos-wheels
           path: dist/debug/
-      - run: pip install --find-links dist/debug/ sqlite_ulid
-      - run: make test-loadable
-      - run: make test-python
+      - run: brew install python
+      - run: /usr/local/opt/python@3/libexec/bin/pip install --find-links dist/debug/ sqlite_ulid
+      - run: make python=/usr/local/opt/python@3/libexec/bin/python test-loadable
+      - run: make python=/usr/local/opt/python@3/libexec/bin/python test-python
   build-macos-arm:
     name: Building macos-latest with arm
     runs-on: macos-latest
