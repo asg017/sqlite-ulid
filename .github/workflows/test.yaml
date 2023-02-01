@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
-          path: dist/debug/wheelhouse/*.whl
+          path: dist/debug/wheels/*.whl
   test-ubuntu:
     runs-on: ubuntu-20.04
     needs: [build-ubuntu, build-ubuntu-python]
@@ -102,7 +102,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-wheels
-          path: dist/debug/wheelhouse/*.whl
+          path: dist/debug/wheels/*.whl
   test-macos:
     runs-on: macos-latest
     needs: [build-macos, build-macos-python]
@@ -160,7 +160,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm-wheels
-          path: dist/debug/wheelhouse/*.whl
+          path: dist/debug/wheels/*.whl
   build-windows:
     name: Building windows-latest
     runs-on: windows-latest
@@ -200,7 +200,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows-wheels
-          path: dist/debug/wheelhouse/*.whl
+          path: dist/debug/wheels/*.whl
   test-windows:
     runs-on: windows-latest
     needs: [build-windows, build-windows-python]

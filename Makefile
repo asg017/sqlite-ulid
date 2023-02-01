@@ -29,9 +29,9 @@ TARGET_STATIC=$(prefix)/debug/ulid0.a
 TARGET_LOADABLE_RELEASE=$(prefix)/release/ulid0.$(LOADABLE_EXTENSION)
 TARGET_STATIC_RELEASE=$(prefix)/release/ulid0.a
 
-TARGET_PYPACKAGE=$(prefix)/debug/wheelhouse
+TARGET_WHEELS=$(prefix)/debug/wheels
 
-INTERMEDIATE_PYPACKAGE_EXTENSION=python/sqlite_ulid/ulid0.$(LOADABLE_EXTENSION)
+INTERMEDIATE_PYPACKAGE_EXTENSION=python/sqlite_ulid/sqlite_ulid/ulid0.$(LOADABLE_EXTENSION)
 
 ifdef target
 CARGO_TARGET=--target=$(target)
@@ -53,6 +53,9 @@ $(prefix):
 	mkdir -p $(prefix)/debug
 	mkdir -p $(prefix)/release
 
+$(TARGET_WHEELS): $(prefix)
+	mkdir -p $(TARGET_WHEELS)
+
 $(TARGET_LOADABLE): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build $(CARGO_TARGET)
 	cp $(BUILT_LOCATION) $@
@@ -65,11 +68,14 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 $(INTERMEDIATE_PYPACKAGE_EXTENSION): $(TARGET_LOADABLE)
 	cp $(TARGET_LOADABLE) $(INTERMEDIATE_PYPACKAGE_EXTENSION)
 	
-$(TARGET_PYPACKAGE): $(INTERMEDIATE_PYPACKAGE_EXTENSION) python/setup.py python/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
-	rm $(TARGET_PYPACKAGE)/* || true
-	pip wheel python/ -w $(TARGET_PYPACKAGE)
-	python3 .github/workflows/rename-wheels.py $(TARGET_PYPACKAGE)
-	touch $(TARGET_PYPACKAGE)
+python: $(INTERMEDIATE_PYPACKAGE_EXTENSION) $(TARGET_WHEELS) python/sqlite_ulid/setup.py python/sqlite_ulid/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
+	rm $(TARGET_WHEELS)/sqlite_ulid* || true
+	pip wheel python/sqlite_ulid/ -w $(TARGET_WHEELS)
+	python3 .github/workflows/rename-wheels.py $(TARGET_WHEELS)
+
+datasette: $(TARGET_WHEELS) python/datasette_sqlite_ulid/setup.py python/datasette_sqlite_ulid/datasette_sqlite_ulid/__init__.py
+	rm $(TARGET_WHEELS)/datasette* || true
+	pip wheel python/datasette_sqlite_ulid/ --no-deps -w $(TARGET_WHEELS)
 
 format:
 	cargo fmt
@@ -82,7 +88,6 @@ release: $(TARGET_LOADABLE_RELEASE) $(TARGET_STATIC_RELEASE)
 loadable: $(TARGET_LOADABLE)
 loadable-release: $(TARGET_LOADABLE_RELEASE)
 static: $(TARGET_STATIC)
-python: $(TARGET_PYPACKAGE)
 debug: loadable static
 
 clean:
