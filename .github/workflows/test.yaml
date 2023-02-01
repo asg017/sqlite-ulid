@@ -63,16 +63,10 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: dist/debug/
-      - run: pip install dist/debug/sqlite_ulid-0.0.1a5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+      - run: pip install --find-links dist/debug/
       - run: make test-loadable
       - run: make test-python
-      - uses: actions/upload-artifact@v3
-        with:
-          name: sqlite-ulid-ubuntu-wheels
-          path: python/wheelhouse/*.whl
-
   build-macos:
-    if: false
     name: Building macos-latest
     runs-on: macos-latest
     steps:
@@ -117,8 +111,23 @@ jobs:
         with:
           name: sqlite-ulid-macos-wheels
           path: python/wheelhouse/*.whl
+  test-macos:
+    runs-on: macos-latest
+    needs: [build-macos, build-macos-python]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos
+          path: dist/debug/
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-wheels
+          path: dist/debug/
+      - run: pip install --find-links dist/debug/
+      - run: make test-loadable
+      - run: make test-python
   build-macos-arm:
-    if: false
     name: Building macos-latest with arm
     runs-on: macos-latest
     steps:
@@ -165,7 +174,6 @@ jobs:
           name: sqlite-ulid-macos-arm-wheels
           path: python/wheelhouse/*.whl
   build-windows:
-    if: false
     name: Building windows-latest
     runs-on: windows-latest
     steps:
@@ -209,14 +217,24 @@ jobs:
         with:
           name: sqlite-ulid-windows-wheels
           path: python/wheelhouse/*.whl
+  test-windows:
+    runs-on: windows-latest
+    needs: [build-windows, build-windows-python]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows
+          path: dist/debug/
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows-wheels
+          path: dist/debug/
+      - run: pip install --find-links dist/debug/
+      - run: make test-loadable
+      - run: make test-python
   upload_test_pypi:
-    needs:
-      [
-        build-ubuntu-python,
-        build-macos-python,
-        build-macos-arm-python,
-        build-windows-python,
-      ]
+    needs: [test-ubuntu, test-macos, test-windows, build-macos-arm-python]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
