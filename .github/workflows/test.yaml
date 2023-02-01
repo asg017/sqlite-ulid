@@ -43,6 +43,7 @@ jobs:
       - uses: actions/setup-python@v3
       - run: pip install wheel
       - run: make python
+      - run: make datasette
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
@@ -99,6 +100,7 @@ jobs:
       - uses: actions/setup-python@v3
       - run: pip install wheel
       - run: make python
+      - run: make datasette
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-wheels
@@ -157,6 +159,7 @@ jobs:
       - uses: actions/setup-python@v3
       - run: pip install wheel
       - run: make python
+      - run: make datasette
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm-wheels
@@ -197,6 +200,7 @@ jobs:
       - uses: actions/setup-python@v3
       - run: pip install wheel
       - run: make python
+      - run: make datasette
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows-wheels
