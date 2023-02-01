@@ -29,6 +29,10 @@ TARGET_STATIC=$(prefix)/debug/ulid0.a
 TARGET_LOADABLE_RELEASE=$(prefix)/release/ulid0.$(LOADABLE_EXTENSION)
 TARGET_STATIC_RELEASE=$(prefix)/release/ulid0.a
 
+TARGET_PYPACKAGE=$(prefix)/debug/wheelhouse
+
+INTERMEDIATE_PYPACKAGE_EXTENSION=python/sqlite_ulid/ulid.$(LOADABLE_EXTENSION)
+
 ifdef target
 CARGO_TARGET=--target=$(target)
 BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
@@ -57,6 +61,16 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build --release $(CARGO_TARGET)
 	cp $(BUILT_LOCATION_RELEASE) $@
 
+
+$(INTERMEDIATE_PYPACKAGE_EXTENSION): $(TARGET_LOADABLE)
+	cp $(TARGET_LOADABLE) $(INTERMEDIATE_PYPACKAGE_EXTENSION)
+	
+$(TARGET_PYPACKAGE): $(INTERMEDIATE_PYPACKAGE_EXTENSION) python/setup.py python/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
+	rm $(TARGET_PYPACKAGE)/* || true
+	pip wheel python/ -w $(TARGET_PYPACKAGE)
+	python3 .github/workflows/rename-wheels.py $(TARGET_PYPACKAGE)
+	touch $(TARGET_PYPACKAGE)
+
 format:
 	cargo fmt
 
@@ -68,6 +82,7 @@ release: $(TARGET_LOADABLE_RELEASE) $(TARGET_STATIC_RELEASE)
 loadable: $(TARGET_LOADABLE)
 loadable-release: $(TARGET_LOADABLE_RELEASE)
 static: $(TARGET_STATIC)
+python: $(TARGET_PYPACKAGE)
 debug: loadable static
 
 clean:

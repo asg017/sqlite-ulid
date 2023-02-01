@@ -10,6 +10,10 @@ for filename in os.listdir(wheel_dir):
   if not filename.suffix == '.whl':
     continue
   new_filename = (filename.name
+    .replace('cp37-cp39', 'py3-none')
+    .replace('cp38-cp38', 'py3-none')
+    .replace('cp39-cp39', 'py3-none')
+    .replace('cp310-cp310', 'py3-none')
     .replace('cp311-cp311', 'py3-none')
     .replace('linux_x86_64', 'manylinux_2_17_x86_64.manylinux2014_x86_64')
     

@@ -40,16 +40,13 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/
-      - run: cp dist/debug/ulid0.so python/sqlite_ulid/
       - uses: actions/setup-python@v3
       - run: pip install wheel
-      - run: pip wheel . -w wheelhouse
-        working-directory: python/
-      - run: python3 .github/workflows/rename-wheels.py python/wheelhouse
+      - run: make python
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
-          path: python/wheelhouse/*.whl
+          path: dist/debug/wheelhouse/*.whl
   test-ubuntu:
     runs-on: ubuntu-20.04
     needs: [build-ubuntu, build-ubuntu-python]
@@ -99,12 +96,9 @@ jobs:
         with:
           name: sqlite-ulid-macos
           path: dist/debug/
-      - run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
       - uses: actions/setup-python@v3
       - run: pip install wheel
-      - run: pip wheel . -w wheelhouse
-        working-directory: python/
-      - run: python3 .github/workflows/rename-wheels.py python/wheelhouse
+      - run: make python
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-wheels
@@ -160,12 +154,9 @@ jobs:
         with:
           name: sqlite-ulid-macos-arm
           path: dist/debug/
-      - run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
       - uses: actions/setup-python@v3
       - run: pip install wheel
-      - run: pip wheel . -w wheelhouse
-        working-directory: python/
-      - run: python3 .github/workflows/rename-wheels.py python/wheelhouse --is-macos-arm
+      - run: make python
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm-wheels
@@ -203,12 +194,9 @@ jobs:
         with:
           name: sqlite-ulid-windows
           path: dist/debug/
-      - run: cp dist/debug/ulid0.dll python/sqlite_ulid/
       - uses: actions/setup-python@v3
       - run: pip install wheel
-      - run: pip wheel . -w wheelhouse
-        working-directory: python/
-      - run: python3 .github/workflows/rename-wheels.py python/wheelhouse
+      - run: make python
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows-wheels
