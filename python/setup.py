@@ -4,19 +4,18 @@ import platform
 
 VERSION = "0.0.1.alpha-5"
 
-machine = platform.machine()
 system = platform.system()
+machine = platform.machine()
+
+print(system, machine)
 
 if system == 'Darwin':
-  if machine == 'x86_64':
-    pass
-  raise Exception("unsupported platform")  
+  if machine not in ['x86_64', 'arm64']:
+    raise Exception("unsupported platform")  
 elif system == 'Linux':
-  if machine == 'x86_64':
-    pass
-  raise Exception("unsupported platform")
+  if machine not in ['x86_64']:
+    raise Exception("unsupported platform")
 elif system == 'Windows':
-  # TODO check machine?
   pass
 else: 
   raise Exception("unsupported platform")
