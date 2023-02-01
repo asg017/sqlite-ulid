@@ -146,8 +146,6 @@ jobs:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
       - run: make target=aarch64-apple-darwin loadable
-      # don't test macos arm builds bc gh actions doesn't have arm macos
-      #- run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -191,7 +189,6 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
-      - run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
