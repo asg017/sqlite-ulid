@@ -2,28 +2,24 @@ from setuptools import setup, Extension
 import os
 import platform
 
-VERSION = "0.0.1.alpha-4"
+VERSION = "0.0.1.alpha-5"
 
-def determine_package_data():
-  machine = platform.machine()
-  system = platform.system()
+machine = platform.machine()
+system = platform.system()
 
-  if system == 'Darwin':
-    if machine == 'x86_64':
-      return ["./ulid0.dylib"]
-    raise Exception("unsupported platform")  
-  elif system == 'Linux':
-    if machine == 'x86_64':
-      return ["./ulid0.so"]
-    raise Exception("unsupported platform")
-  elif system == 'Windows':
-    # TODO check machine?
-    return ["./ulid0.dll"]
-  else: 
-    raise Exception("unsupported platform")
-
-print("Running setup.py...")
-package_data = determine_package_data()
+if system == 'Darwin':
+  if machine == 'x86_64':
+    pass
+  raise Exception("unsupported platform")  
+elif system == 'Linux':
+  if machine == 'x86_64':
+    pass
+  raise Exception("unsupported platform")
+elif system == 'Windows':
+  # TODO check machine?
+  pass
+else: 
+  raise Exception("unsupported platform")
 
 setup(
     name="sqlite-ulid",
@@ -40,7 +36,7 @@ setup(
     license="Apache License, Version 2.0",
     version=VERSION,
     packages=["sqlite_ulid"],
-    package_data={"sqlite_ulid": package_data},
+    package_data={"sqlite_ulid": ['*.so', '*.dylib', '*.dll']},
     install_requires=[],
     ext_modules=[Extension("noop", ["noop.c"], optional=True)],
     extras_require={"test": ["pytest"]},
