@@ -63,7 +63,7 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: dist/debug/
-      - run: pip install dist/debug/sqlite_ulid-0.0.1a5-py3-none-macosx_10_6_x86_64.whl
+      - run: pip install dist/debug/sqlite_ulid-0.0.1a5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - run: make test-loadable
       - run: make test-python
       - uses: actions/upload-artifact@v3
