@@ -120,6 +120,26 @@ jobs:
         with:
           name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
+  test-python-macos-arm:
+    runs-on: macos-latest
+    needs: [test-macos-arm]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm
+          path: dist/debug/
+      - run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
+      - uses: actions/setup-python@v3
+      - run: pip install wheel
+      - run: pip wheel . -w wheelhouse
+        working-directory: python/
+      - run: mv python/wheelhouse/sqlite_ulid-0.0.1-cp311-cp311-macosx_12_0_universal2.whl python/wheelhouse/sqlite_ulid-0.0.1-py3-none-macosx_11_0_arm64.whl
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm-wheels
+          path: python/wheelhouse/*.whl
   test-windows:
     name: Testing windows-latest
     runs-on: windows-latest
