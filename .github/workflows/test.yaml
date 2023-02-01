@@ -222,6 +222,7 @@ jobs:
       - run: make test-loadable
       - run: make test-python
   upload_test_pypi:
+    if: ${{ contains(github.event.head_commit.message, '@test_pypi') }}
     needs: [test-ubuntu, test-macos, test-windows, build-macos-arm-python]
     runs-on: ubuntu-latest
     steps:

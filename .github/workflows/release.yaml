@@ -71,7 +71,6 @@ jobs:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
       - run: make target=aarch64-apple-darwin loadable
-      #- run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:

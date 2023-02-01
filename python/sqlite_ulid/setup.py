@@ -32,7 +32,7 @@ setup(
         "CI": "https://github.com/asg017/sqlite-ulid/actions",
         "Changelog": "https://github.com/asg017/sqlite-ulid/releases",
     },
-    license="Apache License, Version 2.0",
+    license="MIT License, Apache License, Version 2.0",
     version=VERSION,
     packages=["sqlite_ulid"],
     package_data={"sqlite_ulid": ['*.so', '*.dylib', '*.dll']},

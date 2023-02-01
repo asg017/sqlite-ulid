@@ -14,7 +14,7 @@ setup(
         "CI": "https://github.com/asg017/sqlite-ulid/actions",
         "Changelog": "https://github.com/asg017/sqlite-ulid/releases",
     },
-    license="Apache License, Version 2.0",
+    license="MIT License, Apache License, Version 2.0",
     version=VERSION,
     packages=["datasette_sqlite_ulid"],
     entry_points={"datasette": ["sqlite_ulid = datasette_sqlite_ulid"]},
