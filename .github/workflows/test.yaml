@@ -1,4 +1,4 @@
-name: "test build"
+name: "build"
 on:
   push:
     branches:
@@ -7,8 +7,8 @@ on:
 permissions:
   contents: read
 jobs:
-  test-ubuntu:
-    name: Testing ubuntu-20.04
+  build-ubuntu:
+    name: Building ubuntu-20.04
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -30,9 +30,9 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/ulid0.so
-  test-python-ubuntu:
+  build-ubuntu-python:
     runs-on: ubuntu-20.04
-    needs: [test-ubuntu]
+    needs: [build-ubuntu]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -50,8 +50,8 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: python/wheelhouse/*.whl
-  test-macos:
-    name: Testing macos-latest
+  build-macos:
+    name: Building macos-latest
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -68,15 +68,15 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
-      #- run: make test
+      - run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos
           path: dist/debug/ulid0.dylib
-  test-python-macos:
+  build-macos-python:
     runs-on: macos-latest
-    needs: [test-macos]
+    needs: [build-macos]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -94,8 +94,8 @@ jobs:
         with:
           name: sqlite-ulid-macos-wheels
           path: python/wheelhouse/*.whl
-  test-macos-arm:
-    name: Testing macos-latest with arm
+  build-macos-arm:
+    name: Building macos-latest with arm
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -113,15 +113,16 @@ jobs:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
       - run: make target=aarch64-apple-darwin loadable
+      # don't test macos arm builds bc gh actions doesn't have arm macos
       #- run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
-  test-python-macos-arm:
+  build-macos-arm-python:
     runs-on: macos-latest
-    needs: [test-macos-arm]
+    needs: [build-macos-arm]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -139,8 +140,8 @@ jobs:
         with:
           name: sqlite-ulid-macos-arm-wheels
           path: python/wheelhouse/*.whl
-  test-windows:
-    name: Testing windows-latest
+  build-windows:
+    name: Building windows-latest
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -157,15 +158,15 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable
-      #- run: make test
+      - run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows
           path: dist/debug/ulid0.dll
-  test-python-windows:
+  build-windows-python:
     runs-on: windows-latest
-    needs: [test-windows]
+    needs: [build-windows]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -183,13 +184,13 @@ jobs:
         with:
           name: sqlite-ulid-windows-wheels
           path: python/wheelhouse/*.whl
-  upload_pypi_test:
+  upload_test_pypi:
     needs:
       [
-        test-python-ubuntu,
-        test-python-macos,
-        test-python-macos-arm,
-        test-python-windows,
+        build-ubuntu-python,
+        build-macos-python,
+        build-macos-arm-python,
+        build-windows-python,
       ]
     runs-on: ubuntu-latest
     steps:
