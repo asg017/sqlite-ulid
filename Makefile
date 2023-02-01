@@ -49,6 +49,12 @@ else
 PYTHON=python3
 endif
 
+ifdef IS_MACOS_ARM
+RENAME_WHEELS_ARGS=--is-macos-arm
+else
+RENAME_WHEELS_ARGS=
+endif
+
 $(prefix):
 	mkdir -p $(prefix)/debug
 	mkdir -p $(prefix)/release
@@ -67,11 +73,11 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 
 $(INTERMEDIATE_PYPACKAGE_EXTENSION): $(TARGET_LOADABLE)
 	cp $(TARGET_LOADABLE) $(INTERMEDIATE_PYPACKAGE_EXTENSION)
-	
+
 python: $(INTERMEDIATE_PYPACKAGE_EXTENSION) $(TARGET_WHEELS) python/sqlite_ulid/setup.py python/sqlite_ulid/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
 	rm $(TARGET_WHEELS)/sqlite_ulid* || true
 	pip wheel python/sqlite_ulid/ -w $(TARGET_WHEELS)
-	python3 .github/workflows/rename-wheels.py $(TARGET_WHEELS)
+	python3 .github/workflows/rename-wheels.py $(TARGET_WHEELS) $(RENAME_WHEELS_ARGS)
 
 datasette: $(TARGET_WHEELS) python/datasette_sqlite_ulid/setup.py python/datasette_sqlite_ulid/datasette_sqlite_ulid/__init__.py
 	rm $(TARGET_WHEELS)/datasette* || true

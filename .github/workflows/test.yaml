@@ -120,8 +120,8 @@ jobs:
           path: dist/debug/
       - run: brew install python
       - run: /usr/local/opt/python@3/libexec/bin/pip install --find-links dist/debug/ sqlite_ulid
-      - run: make python=/usr/local/opt/python@3/libexec/bin/python test-loadable
-      - run: make python=/usr/local/opt/python@3/libexec/bin/python test-python
+      - run: make test-loadable python=/usr/local/opt/python@3/libexec/bin/python
+      - run: make test-python python=/usr/local/opt/python@3/libexec/bin/python
   build-macos-arm:
     name: Building macos-latest with arm
     runs-on: macos-latest
@@ -140,7 +140,7 @@ jobs:
         with:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
-      - run: make target=aarch64-apple-darwin loadable
+      - run: make loadable target=aarch64-apple-darwin
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -158,7 +158,7 @@ jobs:
           path: dist/debug/
       - uses: actions/setup-python@v3
       - run: pip install wheel
-      - run: make python
+      - run: make python IS_MACOS_ARM=1
       - run: make datasette
       - uses: actions/upload-artifact@v3
         with:
