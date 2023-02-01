@@ -169,7 +169,7 @@ jobs:
       #    name: sqlite-ulid-windows
       #    path: dist/debug/
       #- run: cp dist/debug/ulid0.dylib python/sqlite_ulid/
-      - run: curl --output python/sqlite_ulid/ulid0.dll 'https://github.com/asg017/sqlite-ulid/releases/download/unstable/ulid0.dll'
+      - run: curl -L --output python/sqlite_ulid/ulid0.dll 'https://github.com/asg017/sqlite-ulid/releases/download/unstable/ulid0.dll'
       - uses: actions/setup-python@v3
       - run: pip install wheel
       - run: pip wheel . -w wheelhouse
