@@ -74,7 +74,14 @@ clean:
 	rm dist/*
 	cargo clean
 
-test:
+test-loadable:
 	$(PYTHON) tests/test-loadable.py
+
+test-python:
+	$(PYTHON) tests/test-python.py
+
+test:
+	make test-loadable
+	make test-python
 
 .PHONY: clean test loadable static debug
