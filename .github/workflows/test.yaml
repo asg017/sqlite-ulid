@@ -184,31 +184,31 @@ jobs:
           name: sqlite-ulid-windows-wheels
           path: python/wheelhouse/*.whl
   upload_pypi_test:
-    needs: [
+    needs:
+      [
         test-python-ubuntu,
-        #test-python-macos,
-        #test-python-macos-arm,
-        #test-python-windows,
+        test-python-macos,
+        test-python-macos-arm,
+        test-python-windows,
       ]
     runs-on: ubuntu-latest
     steps:
-      #- uses: actions/download-artifact@v3
-      #  with:
-      #    name: sqlite-ulid-windows-wheels
-      #    path: dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows-wheels
+          path: dist
       - uses: actions/download-artifact@v3
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: dist
-      #- uses: actions/download-artifact@v3
-      #  with:
-      #    name: sqlite-ulid-macos-wheels
-      #    path: dist
-      #- uses: actions/download-artifact@v3
-      #  with:
-      #    name: sqlite-ulid-macos-arm-wheels
-      #    path: dist
-
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-wheels
+          path: dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm-wheels
+          path: dist
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
