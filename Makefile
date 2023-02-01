@@ -31,7 +31,7 @@ TARGET_STATIC_RELEASE=$(prefix)/release/ulid0.a
 
 TARGET_PYPACKAGE=$(prefix)/debug/wheelhouse
 
-INTERMEDIATE_PYPACKAGE_EXTENSION=python/sqlite_ulid/ulid.$(LOADABLE_EXTENSION)
+INTERMEDIATE_PYPACKAGE_EXTENSION=python/sqlite_ulid/ulid0.$(LOADABLE_EXTENSION)
 
 ifdef target
 CARGO_TARGET=--target=$(target)
