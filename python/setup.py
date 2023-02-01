@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 import os
 import platform
 
-VERSION = "0.0.1.alpha-3"
+VERSION = "0.0.1.alpha-4"
 
 def determine_package_data():
   machine = platform.machine()
