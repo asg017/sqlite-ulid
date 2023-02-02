@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = "0.0.1.alpha-9"
+VERSION = "0.1.1-alpha.1"
 
 setup(
     name="datasette-sqlite-ulid",

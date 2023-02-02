@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 import os
 import platform
 
-VERSION = "0.0.1.alpha-9"
+VERSION = "0.1.1-alpha.1"
 
 system = platform.system()
 machine = platform.machine()
