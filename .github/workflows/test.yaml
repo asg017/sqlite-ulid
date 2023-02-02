@@ -60,8 +60,8 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu-wheels
           path: dist/debug/
-      - run: python --version && pip --version && ldd --version
-      - run: pip install --find-links dist/debug/ sqlite_ulid
+      - run: python3 --version && pip3 --version && ldd --version
+      - run: pip3 install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable
       - run: make test-python
   build-macos-extension:
