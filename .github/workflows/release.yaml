@@ -29,6 +29,24 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/release/ulid0.so
+  build-ubuntu-python:
+    runs-on: ubuntu-20.04
+    needs: [build-ubuntu-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu
+          path: dist/release/
+      - uses: actions/setup-python@v3
+      - run: pip install wheel
+      - run: make python-release
+      - run: make datasette-release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu-wheels
+          path: dist/release/wheels/*.whl
   build-macos-extension:
     name: Build macos-latest
     runs-on: macos-latest
@@ -52,6 +70,24 @@ jobs:
         with:
           name: sqlite-ulid-macos
           path: dist/release/ulid0.dylib
+  build-macos-python:
+    runs-on: macos-latest
+    needs: [build-macos-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos
+          path: dist/release/
+      - uses: actions/setup-python@v3
+      - run: pip install wheel
+      - run: make python-release
+      - run: make datasette-release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-macos-wheels
+          path: dist/release/wheels/*.whl
   build-macos-arm-extension:
     name: Build macos-latest with arm
     runs-on: macos-latest
@@ -75,7 +111,25 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm
-          path: dist/debug/ulid0.dylib
+          path: dist/release/ulid0.dylib
+  build-macos-arm-python:
+    runs-on: macos-latest
+    needs: [build-macos-arm-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm
+          path: dist/release/
+      - uses: actions/setup-python@v3
+      - run: pip install wheel
+      - run: make python-release IS_MACOS_ARM=1
+      - run: make datasette-release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm-wheels
+          path: dist/release/wheels/*.whl
   build-windows-extension:
     name: Build windows-latest
     runs-on: windows-latest
@@ -99,6 +153,24 @@ jobs:
         with:
           name: sqlite-ulid-windows
           path: dist/release/ulid0.dll
+  build-windows-python:
+    runs-on: windows-latest
+    needs: [build-windows-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows
+          path: dist/release/
+      - uses: actions/setup-python@v3
+      - run: pip install wheel
+      - run: make python-release
+      - run: make datasette-release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sqlite-ulid-windows-wheels
+          path: dist/release/wheels/*.whl
   upload-release-assets:
     name: Upload release assets
     needs:
@@ -122,3 +194,33 @@ jobs:
           script: |
             const script = require('.github/workflows/upload.js')
             await script({github, context})
+  upload_pypi:
+    needs:
+      [
+        build-ubuntu-python,
+        build-macos-python,
+        build-macos-arm-python,
+        build-windows-python,
+      ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows-wheels
+          path: dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu-wheels
+          path: dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-wheels
+          path: dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos-arm-wheels
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip_existing: true

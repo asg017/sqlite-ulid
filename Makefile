@@ -128,5 +128,7 @@ test:
 .PHONY: clean \
 	test test-loadable test-python \
 	loadable loadable-release \
+	python python-release \
+	datasette datasette-release \
 	static static-release \
 	debug release
