@@ -29,5 +29,5 @@ for filename in os.listdir(wheel_dir):
     new_filename = new_filename.replace('macosx_12_0_universal2', 'macosx_11_0_arm64')
   else:
     new_filename = new_filename.replace('macosx_12_0_universal2', 'macosx_10_6_x86_64')
-  print("renaming", filename, "to", new_filename)
+  print("renaming", filename, "to", new_filename) 
   os.rename(filename, Path(wheel_dir, new_filename))
