@@ -114,7 +114,7 @@ See [`python/sqlite_ulid`](./python/sqlite_ulid/README.md) for more details.
 And for [Datasette](https://datasette.io/), use the [`datasette-sqlite-ulid` Datasette plugin](https://datasette.io/plugins/datasette-sqlite-ulid) that can be installed with:
 
 ```
-datasette install datasette-sqlite-ulid
+datasette install  datasette-sqlite-ulid
 ```
 
 See [`python/datasette_sqlite_ulid`](./python/datasette_sqlite_ulid/README.md) for more details.
