@@ -43,5 +43,5 @@ setup(
     # didn't seem to respect optional=True
     ext_modules=[Extension("noop", ["noop.c"], optional=True)],
     extras_require={"test": ["pytest"]},
-    python_requires=">=3.7",
+    python_requires=">=3.6",
 )
