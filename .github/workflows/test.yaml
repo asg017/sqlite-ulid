@@ -7,8 +7,8 @@ permissions:
   contents: read
 jobs:
   build-ubuntu-extension:
-    name: Building ubuntu-20.04
-    runs-on: ubuntu-20.04
+    name: Building ubuntu-18.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
@@ -30,7 +30,7 @@ jobs:
           name: sqlite-ulid-ubuntu
           path: dist/debug/ulid0.so
   build-ubuntu-python:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     needs: [build-ubuntu-extension]
     steps:
       - uses: actions/checkout@v3
@@ -48,7 +48,7 @@ jobs:
           name: sqlite-ulid-ubuntu-wheels
           path: dist/debug/wheels/*.whl
   test-ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     needs: [build-ubuntu-extension, build-ubuntu-python]
     steps:
       - uses: actions/checkout@v3
