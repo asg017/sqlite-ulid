@@ -11,7 +11,7 @@ async def test_plugin_is_installed():
     assert "datasette-sqlite-ulid" in installed_plugins
 
 @pytest.mark.asyncio
-async def test_plugin_is_installed():
+async def test_sqlite_ulid_functions():
     datasette = Datasette(memory=True)
     response = await datasette.client.get("/_memory.json?sql=select+ulid_version(),ulid()")
     assert response.status_code == 200

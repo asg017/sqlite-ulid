@@ -16,6 +16,7 @@ elif system == 'Linux':
   if machine not in ['x86_64']:
     raise Exception("unsupported platform")
 elif system == 'Windows':
+  # TODO only 64 bit I think
   pass
 else: 
   raise Exception("unsupported platform")
@@ -37,6 +38,9 @@ setup(
     packages=["sqlite_ulid"],
     package_data={"sqlite_ulid": ['*.so', '*.dylib', '*.dll']},
     install_requires=[],
+    # Adding an Extension makes `pip wheel` believe that this isn't a 
+    # pure-python package. The noop.c was added since the windows build
+    # didn't seem to respect optional=True
     ext_modules=[Extension("noop", ["noop.c"], optional=True)],
     extras_require={"test": ["pytest"]},
     python_requires=">=3.7",
