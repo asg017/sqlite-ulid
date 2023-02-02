@@ -3,11 +3,10 @@ on:
   push:
     branches:
       - main
-      - pip-install
 permissions:
   contents: read
 jobs:
-  build-ubuntu:
+  build-ubuntu-extension:
     name: Building ubuntu-20.04
     runs-on: ubuntu-20.04
     steps:
@@ -32,7 +31,7 @@ jobs:
           path: dist/debug/ulid0.so
   build-ubuntu-python:
     runs-on: ubuntu-20.04
-    needs: [build-ubuntu]
+    needs: [build-ubuntu-extension]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -50,7 +49,7 @@ jobs:
           path: dist/debug/wheels/*.whl
   test-ubuntu:
     runs-on: ubuntu-20.04
-    needs: [build-ubuntu, build-ubuntu-python]
+    needs: [build-ubuntu-extension, build-ubuntu-python]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -64,7 +63,7 @@ jobs:
       - run: pip install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable
       - run: make test-python
-  build-macos:
+  build-macos-extension:
     name: Building macos-latest
     runs-on: macos-latest
     steps:
@@ -89,7 +88,7 @@ jobs:
           path: dist/debug/ulid0.dylib
   build-macos-python:
     runs-on: macos-latest
-    needs: [build-macos]
+    needs: [build-macos-extension]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -107,7 +106,7 @@ jobs:
           path: dist/debug/wheels/*.whl
   test-macos:
     runs-on: macos-latest
-    needs: [build-macos, build-macos-python]
+    needs: [build-macos-extension, build-macos-python]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -122,8 +121,8 @@ jobs:
       - run: /usr/local/opt/python@3/libexec/bin/pip install --find-links dist/debug/ sqlite_ulid
       - run: make test-loadable python=/usr/local/opt/python@3/libexec/bin/python
       - run: make test-python python=/usr/local/opt/python@3/libexec/bin/python
-  build-macos-arm:
-    name: Building macos-latest with arm
+  build-macos-arm-extension:
+    name: Building macos arm extension
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -148,7 +147,7 @@ jobs:
           path: dist/debug/ulid0.dylib
   build-macos-arm-python:
     runs-on: macos-latest
-    needs: [build-macos-arm]
+    needs: [build-macos-arm-extension]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -164,8 +163,8 @@ jobs:
         with:
           name: sqlite-ulid-macos-arm-wheels
           path: dist/debug/wheels/*.whl
-  build-windows:
-    name: Building windows-latest
+  build-windows-extension:
+    name: Building windows extension
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -189,7 +188,7 @@ jobs:
           path: dist/debug/ulid0.dll
   build-windows-python:
     runs-on: windows-latest
-    needs: [build-windows]
+    needs: [build-windows-extension]
     steps:
       - uses: actions/checkout@v3
       - name: Download workflow artifacts
@@ -207,7 +206,7 @@ jobs:
           path: dist/debug/wheels/*.whl
   test-windows:
     runs-on: windows-latest
-    needs: [build-windows, build-windows-python]
+    needs: [build-windows-extension, build-windows-python]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
