@@ -103,9 +103,25 @@ However, generating 1 million `ulid()` IDs in ~350ms is most likely "good enough
 
 The [Releases page](https://github.com/asg017/sqlite-ulid/releases) contains pre-built binaries for Linux x86_64, MacOS, and Windows.
 
+For Python developers, there is a [`sqlite-ulid` Python package](https://pypi.org/package/sqlite-ulid/) you can install like so:
+
+```
+pip install sqlite-ulid
+```
+
+See [`python/sqlite_ulid`](./python/sqlite_ulid/README.md) for more details.
+
+And for [Datasette](https://datasette.io/), use the [`datasette-sqlite-ulid` Datasette plugin](https://datasette.io/plugins/datasette-sqlite-ulid) that can be installed with:
+
+```
+datasette install datasette-sqlite-ulid
+```
+
+See [`python/datasette_sqlite_ulid`](./python/datasette_sqlite_ulid/README.md) for more details.
+
 ### As a loadable extension
 
-If you want to use `sqlite-ulid` as a [Runtime-loadable extension](https://www.sqlite.org/loadext.html), Download the `ulid0.dylib` (for MacOS), `ulid0.so` (Linux), or `ulid0.dll` (Windows) file from a release and load it into your SQLite environment.
+If you want to use `sqlite-ulid` as a [Runtime-loadable extension](https://www.sqlite.org/loadext.html), Download the `ulid0.dylib` (for MacOS), `ulid0.so` (Linux), or `ulid0.dll` (Windows) file [from a release](https://github.com/asg017/sqlite-ulid/releases) and load it into your SQLite environment.
 
 > **Note:**
 > The `0` in the filename (`ulid0.dylib`/ `ulid0.so`/`ulid0.dll`) denotes the major version of `sqlite-ulid`. Currently `sqlite-ulid` is pre v1, so expect breaking changes in future versions.
@@ -118,7 +134,7 @@ select ulid_version();
 -- v0.1.0
 ```
 
-Or in Python, using the builtin [sqlite3 module](https://docs.python.org/3/library/sqlite3.html):
+In Python, you should prefer the [`sqlite-ulid` Python package](./python/sqlite_ulid/README.md). However, you can manually load a pre-compiled extension with the builtin [sqlite3 module](https://docs.python.org/3/library/sqlite3.html):
 
 ```python
 import sqlite3
@@ -139,7 +155,7 @@ console.log(db.prepare("select ulid_version()").get());
 // { 'ulid_version()': 'v0.1.0' }
 ```
 
-Or with [Datasette](https://datasette.io/):
+With [Datasette](https://datasette.io/), you should prefer the [`datasette-sqlite-ulid` Datasette plugin](./python/datasette_sqlite_ulid/README.md). However, you can manually load a pre-compiled extension into a Datasette instance like so:
 
 ```
 datasette data.db --load-extension ./ulid0

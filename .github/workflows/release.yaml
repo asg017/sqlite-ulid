@@ -1,4 +1,4 @@
-name: "release"
+name: "Release"
 on:
   release:
     types: [published]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build-ubuntu:
+  build-ubuntu-extension:
     name: Build ubuntu-20.04
     runs-on: ubuntu-20.04
     steps:
@@ -29,7 +29,7 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/release/ulid0.so
-  build-macos:
+  build-macos-extension:
     name: Build macos-latest
     runs-on: macos-latest
     steps:
@@ -52,7 +52,7 @@ jobs:
         with:
           name: sqlite-ulid-macos
           path: dist/release/ulid0.dylib
-  build-macos-arm:
+  build-macos-arm-extension:
     name: Build macos-latest with arm
     runs-on: macos-latest
     steps:
@@ -71,13 +71,12 @@ jobs:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
       - run: make target=aarch64-apple-darwin loadable
-      #- run: make test
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm
           path: dist/debug/ulid0.dylib
-  build-windows:
+  build-windows-extension:
     name: Build windows-latest
     runs-on: windows-latest
     steps:
@@ -100,9 +99,15 @@ jobs:
         with:
           name: sqlite-ulid-windows
           path: dist/release/ulid0.dll
-  upload:
-    name: upload
-    needs: [build-macos, build-macos-arm, build-ubuntu, build-windows]
+  upload-release-assets:
+    name: Upload release assets
+    needs:
+      [
+        build-macos-extension,
+        build-macos-arm-extension,
+        build-ubuntu-extension,
+        build-windows-extension,
+      ]
     permissions:
       contents: write
     runs-on: ubuntu-latest
