@@ -1,6 +1,11 @@
 from setuptools import setup
 
-VERSION = "0.2.0"
+version = {}
+with open("datasette_sqlite_ulid/version.py") as fp:
+    exec(fp.read(), version)
+
+VERSION = version['__version__']
+
 
 setup(
     name="datasette-sqlite-ulid",

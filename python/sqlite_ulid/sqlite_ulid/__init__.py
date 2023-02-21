@@ -1,3 +1,5 @@
+from sqlite_ulid.version import __version_info__, __version__ 
+
 import os
 import sqlite3
 
