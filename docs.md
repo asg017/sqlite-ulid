@@ -62,7 +62,7 @@ select ulid_with_prefix('card'); -- 'card_01gqre9c6az7835tdk00wc0gfp'
 
 <h3 name="ulid_datetime"><code>ulid_datetime(ulid)</code></h3>
 
-Extract the timestamp component from the given ULID. The `ulid` parameter can be a string from the [`ulid()](#ulid) function, a string from the [`ulid_with_prefix()`](#ulid_with_prefix) function, or a blob from the [`ulid_bytes`](#ulid_bytes) function. Returns an integer as the
+Extract the timestamp component from the given ULID. The `ulid` parameter can be a string from the [`ulid()`](#ulid) function, a string from the [`ulid_with_prefix()`](#ulid_with_prefix) function, or a blob from the [`ulid_bytes`](#ulid_bytes) function. Returns a text timestamp with `YYYY-MM-DD HH:MM:SS.SSS` format, which can be used with the builtin [`datetime()`](https://www.sqlite.org/lang_datefunc.html) function.
 
 ```sql
 select ulid_datetime('01GQ8C8FWG0W1B5H3W5304049S'); -- '2023-01-20 20:00:00.400'
