@@ -95,6 +95,9 @@ datasette-release: $(TARGET_WHEELS_RELEASE) python/datasette_sqlite_ulid/setup.p
 	rm $(TARGET_WHEELS_RELEASE)/datasette* || true
 	pip3 wheel python/datasette_sqlite_ulid/ --no-deps -w $(TARGET_WHEELS_RELEASE)
 
+npm: VERSION npm/platform-package.README.md.tmpl npm/platform-package.package.json.tmpl npm/sqlite-ulid/package.json.tmpl scripts/npm_generate_platform_packages.sh
+	scripts/npm_generate_platform_packages.sh
+
 Cargo.toml: VERSION
 	cargo set-version `cat VERSION`
 
@@ -136,15 +139,20 @@ test-loadable:
 test-python:
 	$(PYTHON) tests/test-python.py
 
+test-npm:
+	node npm/sqlite-ulid/test.js
 test:
 	make test-loadable
 	make test-python
+	make test-npm
 
 .PHONY: clean \
-	test test-loadable test-python \
+	test test-loadable test-python test-npm \
 	loadable loadable-release \
 	python python-release \
 	datasette datasette-release \
 	static static-release \
 	debug release \
-	format version
+	format version \
+	deno npm \
+	site-serve site-build
