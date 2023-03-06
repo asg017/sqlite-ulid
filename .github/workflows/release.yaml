@@ -171,7 +171,7 @@ jobs:
         with:
           name: sqlite-ulid-windows-wheels
           path: dist/release/wheels/*.whl
-  upload-release-assets:
+  upload-extensions:
     name: Upload release assets
     needs:
       [
@@ -194,6 +194,54 @@ jobs:
           script: |
             const script = require('.github/workflows/upload.js')
             await script({github, context})
+  upload-npm:
+    needs:
+      [
+        build-macos-extension,
+        build-macos-arm-extension,
+        build-ubuntu-extension,
+        build-windows-extension,
+      ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download workflow artifacts
+        uses: actions/download-artifact@v2
+      - run: |
+          cp sqlite-ulid-ubuntu/ulid0.so npm/sqlite-ulid-linux-x64/lib/ulid0.so
+          cp sqlite-ulid-macos/ulid0.dylib npm/sqlite-ulid-darwin-x64/lib/ulid0.dylib
+          cp sqlite-ulid-macos-arm/ulid0.dylib npm/sqlite-ulid-darwin-arm64/lib/ulid0.dylib
+          cp sqlite-ulid-windows/ulid0.dll npm/sqlite-ulid-windows-x64/lib/ulid0.dll
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          registry-url: "https://registry.npmjs.org"
+      - name: Publish NPM sqlite-ulid-linux-x64
+        working-directory: npm/sqlite-ulid-linux-x64
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish NPM sqlite-ulid-darwin-x64
+        working-directory: npm/sqlite-ulid-darwin-x64
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish NPM sqlite-ulid-darwin-arm64
+        working-directory: npm/sqlite-ulid-darwin-arm64
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish NPM sqlite-ulid-windows-x64
+        working-directory: npm/sqlite-ulid-windows-x64
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish NPM sqlite-ulid
+        working-directory: npm/sqlite-ulid
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   upload_pypi:
     needs:
       [
