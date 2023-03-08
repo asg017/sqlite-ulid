@@ -269,7 +269,7 @@ jobs:
           path: dist/debug/
       - uses: actions/download-artifact@v3
         with:
-          name: sqlite-ulid-ubuntu
+          name: sqlite-ulid-windows
           path: npm/sqlite-ulid-windows-x64/lib
       - uses: actions/download-artifact@v3
         with:
