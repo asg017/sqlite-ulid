@@ -98,6 +98,9 @@ datasette-release: $(TARGET_WHEELS_RELEASE) python/datasette_sqlite_ulid/setup.p
 npm: VERSION npm/platform-package.README.md.tmpl npm/platform-package.package.json.tmpl npm/sqlite-ulid/package.json.tmpl scripts/npm_generate_platform_packages.sh
 	scripts/npm_generate_platform_packages.sh
 
+deno: VERSION deno/deno.json.tmpl
+	scripts/deno_generate_package.sh
+
 Cargo.toml: VERSION
 	cargo set-version `cat VERSION`
 
@@ -112,6 +115,7 @@ version:
 	make python/sqlite_ulid/sqlite_ulid/version.py
 	make python/datasette_sqlite_ulid/datasette_sqlite_ulid/version.py
 	make npm
+	make deno
 
 format:
 	cargo fmt
@@ -142,18 +146,22 @@ test-python:
 
 test-npm:
 	node npm/sqlite-ulid/test.js
+
+test-deno:
+	deno task --config deno/deno.json test
+
 test:
 	make test-loadable
 	make test-python
 	make test-npm
+	make test-deno
 
 .PHONY: clean \
-	test test-loadable test-python test-npm \
+	test test-loadable test-python test-npm test-deno \
 	loadable loadable-release \
 	python python-release \
 	datasette datasette-release \
 	static static-release \
 	debug release \
 	format version \
-	deno npm \
-	site-serve site-build
+	npm deno
