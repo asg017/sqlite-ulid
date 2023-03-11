@@ -59,33 +59,6 @@ function targz(files) {
   });
 }
 
-async function uploadPlatform(platform, { VERSION, release_id, github }) {
-  const { path, os, cpu } = platform;
-
-  const artifact = basename(path);
-  const contents = await fs.readFile(path);
-  const tar = await targz([{ name: artifact, data: contents }]);
-
-  const asset_name = `sqlite-ulid-${VERSION}-${os}-${cpu}.tar.gz`;
-  const asset_md5 = crypto.createHash("md5").update(tar).digest("base64");
-  const asset_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
-
-  await github.rest.repos.uploadReleaseAsset({
-    owner,
-    repo,
-    release_id,
-    name: asset_name,
-    data: tar,
-  });
-
-  return {
-    os,
-    cpu,
-    asset_name,
-    asset_sha256,
-    asset_md5,
-  };
-}
 module.exports = async ({ github, context }) => {
   const {
     repo: { owner, repo },
@@ -100,15 +73,41 @@ module.exports = async ({ github, context }) => {
   });
   const release_id = release.data.id;
 
+  async function uploadPlatform(platform) {
+    const { path, os, cpu } = platform;
+
+    const artifact = basename(path);
+    const contents = await fs.readFile(path);
+    const tar = await targz([{ name: artifact, data: contents }]);
+
+    const asset_name = `sqlite-ulid-${VERSION}-${os}-${cpu}.tar.gz`;
+    const asset_md5 = crypto.createHash("md5").update(tar).digest("base64");
+    const asset_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
+
+    await github.rest.repos.uploadReleaseAsset({
+      owner,
+      repo,
+      release_id,
+      name: asset_name,
+      data: tar,
+    });
+
+    return {
+      os,
+      cpu,
+      asset_name,
+      asset_sha256,
+      asset_md5,
+    };
+  }
+
   const spm_json = {
     version: 0,
     extensions: {
       [extension.name]: {
         description: extension.description,
         platforms: await Promise.all(
-          extension.platforms.map((platform) =>
-            uploadPlatform(platform, { VERSION, release_id, github })
-          )
+          extension.platforms.map((platform) => uploadPlatform(platform))
         ),
       },
     },
