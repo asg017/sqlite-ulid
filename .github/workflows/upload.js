@@ -2,6 +2,34 @@ const fs = require("fs").promises;
 const crypto = require("crypto");
 const zlib = require("zlib");
 const tar = require("tar-fs");
+const { basename } = require("path");
+
+const extension = {
+  name: "ulid0",
+  description: "",
+  platforms: [
+    {
+      path: "sqlite-ulid-ubuntu/ulid0.so",
+      os: "linux",
+      cpu: "x86_64",
+    },
+    {
+      path: "sqlite-ulid-macos/ulid0.dylib",
+      os: "darwin",
+      cpu: "x86_64",
+    },
+    {
+      path: "sqlite-ulid-macos-arm/ulid0.dylib",
+      os: "darwin",
+      cpu: "aarch64",
+    },
+    {
+      path: "sqlite-ulid-windows/ulid0.dll",
+      os: "windows",
+      cpu: "x86_64",
+    },
+  ],
+};
 
 function targz(files) {
   return new Promise((resolve, reject) => {
@@ -25,111 +53,72 @@ function targz(files) {
       })
       .on("end", () => {
         const buffer = Buffer.concat(chunks);
-        console.log(buffer);
         resolve(buffer);
       })
       .on("error", reject);
   });
 }
 
+async function uploadPlatform(platform, { VERSION, release_id }) {
+  const { path, os, cpu } = platform;
+
+  const artifact = basename(path);
+  const contents = fs.readFile(path);
+  const tar = await targz([{ name: artifact, data: contents }]);
+
+  const asset_name = `sqlite-ulid-${VERSION}-${os}-${cpu}.tar.gz`;
+  const asset_md5 = crypto.createHash("md5").update(tar).digest("base64");
+  const asset_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
+
+  await github.rest.repos.uploadReleaseAsset({
+    owner,
+    repo,
+    release_id,
+    name: asset_name,
+    data: tar,
+  });
+
+  return {
+    os,
+    cpu,
+    asset_name,
+    asset_sha256,
+    asset_md5,
+  };
+}
 module.exports = async ({ github, context }) => {
   const {
     repo: { owner, repo },
     sha,
   } = context;
-  console.log(process.env.GITHUB_REF);
+  const VERSION = process.env.GITHUB_REF_NAME;
+
   const release = await github.rest.repos.getReleaseByTag({
     owner,
     repo,
     tag: process.env.GITHUB_REF.replace("refs/tags/", ""),
   });
-  console.log("release id: ", release.data.id);
-  const VERSION = process.env.GITHUB_REF_NAME;
   const release_id = release.data.id;
 
-  const compiled_extensions = [
-    {
-      name: "ulid0.so",
-      path: "sqlite-ulid-ubuntu/ulid0.so",
-      asset_name: `sqlite-ulid-${VERSION}-ubuntu-x86_64.tar.gz`,
+  const spm_json = {
+    version: 0,
+    extensions: {
+      [extension.name]: {
+        description: extension.description,
+        platforms: await Promise.all(
+          extension.platforms.map((platform) =>
+            uploadPlatform(platform, { VERSION, release_id })
+          )
+        ),
+      },
     },
-    {
-      name: "ulid0.dylib",
-      path: "sqlite-ulid-macos/ulid0.dylib",
-      asset_name: `sqlite-ulid-${VERSION}-macos-x86_64.tar.gz`,
-    },
-    {
-      name: "ulid0.dylib",
-      path: "sqlite-ulid-macos-arm/ulid0.dylib",
-      asset_name: `sqlite-ulid-${VERSION}-macos-arm64.tar.gz`,
-    },
-    {
-      name: "ulid0.dll",
-      path: "sqlite-ulid-windows/ulid0.dll",
-      asset_name: `sqlite-ulid-${VERSION}-windows-x86_64.tar.gz`,
-    },
-  ];
-  console.log(compiled_extensions);
-
-  const extension_assets = await Promise.all(
-    compiled_extensions.map(async (d) => {
-      const extensionContents = await fs.readFile(d.path);
-      const ext_sha256 = crypto
-        .createHash("sha256")
-        .update(extensionContents)
-        .digest("hex");
-      console.log("ext_sha256", ext_sha256);
-      const tar = await targz([{ name: d.name, data: extensionContents }]);
-      console.log("tar", tar);
-
-      const tar_md5 = crypto.createHash("md5").update(tar).digest("base64");
-      const tar_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
-      console.log("tar_md5", tar_md5);
-      console.log("tar_sha256", tar_sha256);
-
-      return {
-        ext_sha256,
-        tar_md5,
-        tar_sha256,
-        tar,
-        asset_name: d.asset_name,
-      };
-    })
-  );
-  console.log("assets length: ", extension_assets.length);
-  const checksum = {
-    extensions: Object.fromEntries(
-      extension_assets.map((d) => [
-        d.asset_name,
-        {
-          asset_sha265: d.tar_sha256,
-          asset_md5: d.tar_md5,
-          extension_sha256: d.ext_sha256,
-        },
-      ])
-    ),
   };
-  console.log("checksum", checksum);
 
   await github.rest.repos.uploadReleaseAsset({
     owner,
     repo,
     release_id,
     name: "spm.json",
-    data: JSON.stringify(checksum),
+    data: JSON.stringify(spm_json),
   });
-
-  await Promise.all(
-    extension_assets.map(async (d) => {
-      console.log("uploading ", d.asset_name);
-      await github.rest.repos.uploadReleaseAsset({
-        owner,
-        repo,
-        release_id,
-        name: d.asset_name,
-        data: d.tar,
-      });
-    })
-  );
-  return;
 };
