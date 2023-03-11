@@ -63,7 +63,7 @@ async function uploadPlatform(platform, { VERSION, release_id }) {
   const { path, os, cpu } = platform;
 
   const artifact = basename(path);
-  const contents = fs.readFile(path);
+  const contents = await fs.readFile(path);
   const tar = await targz([{ name: artifact, data: contents }]);
 
   const asset_name = `sqlite-ulid-${VERSION}-${os}-${cpu}.tar.gz`;
