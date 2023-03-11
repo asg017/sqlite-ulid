@@ -59,7 +59,7 @@ function targz(files) {
   });
 }
 
-async function uploadPlatform(platform, { VERSION, release_id }) {
+async function uploadPlatform(platform, { VERSION, release_id, github }) {
   const { path, os, cpu } = platform;
 
   const artifact = basename(path);
@@ -107,7 +107,7 @@ module.exports = async ({ github, context }) => {
         description: extension.description,
         platforms: await Promise.all(
           extension.platforms.map((platform) =>
-            uploadPlatform(platform, { VERSION, release_id })
+            uploadPlatform(platform, { VERSION, release_id, github })
           )
         ),
       },
