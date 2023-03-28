@@ -4,6 +4,7 @@ const zlib = require("zlib");
 const tar = require("tar-fs");
 const { basename } = require("path");
 
+const PROJECT = "sqlite-ulid";
 const extension = {
   name: "ulid0",
   description: "",
@@ -80,7 +81,7 @@ module.exports = async ({ github, context }) => {
     const contents = await fs.readFile(path);
     const tar = await targz([{ name: artifact, data: contents }]);
 
-    const asset_name = `sqlite-ulid-${VERSION}-${os}-${cpu}.tar.gz`;
+    const asset_name = `${PROJECT}-${VERSION}-${os}-${cpu}.tar.gz`;
     const asset_md5 = crypto.createHash("md5").update(tar).digest("base64");
     const asset_sha256 = crypto.createHash("sha256").update(tar).digest("hex");
 
