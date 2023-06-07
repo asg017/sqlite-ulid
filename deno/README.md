@@ -13,14 +13,14 @@ import * as sqlite_ulid from "https://deno.land/x/sqlite_ulid@v0.2.1-alpha.9/mod
 
 const db = new Database(":memory:");
 
-  db.enableLoadExtension = true;
-  db.loadExtension(sqlite_ulid.getLoadablePath());
+db.enableLoadExtension = true;
+sqlite_ulid.load(db);
 
-  const [version] = db
-    .prepare("select ulid_version()")
-    .value<[string]>()!;
+const [version] = db
+  .prepare("select ulid_version()")
+  .value<[string]>()!;
 
-  console.log(version);
+console.log(version);
 
 ```
 
