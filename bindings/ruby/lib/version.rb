@@ -1,4 +1,4 @@
 # automatically generated, do not edit by hand.
 module SqliteUlid
-  VERSION = ""
+  VERSION = "0.2.1-alpha.12"
 end
