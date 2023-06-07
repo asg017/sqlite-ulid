@@ -1,6 +1,6 @@
 {
   "name": "sqlite-ulid",
-  "version": "0.2.1-alpha.10",
+  "version": "0.2.1-alpha.11",
   "github": "https://github.com/asg017/sqlite-ulid",
   "tasks": {
     "test": "deno test --unstable -A test.ts"
