@@ -101,7 +101,20 @@ However, generating 1 million `ulid()` IDs in ~350ms is most likely "good enough
 
 ## Using with...
 
-In addition to pre-compiled loadable extensions, `sqlite-ulid` is distributed along with popular package managers for usage
+| Language       | Install                                                      |                                                                                                                                                                                             |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Python         | `pip install sqlite-ulid`                                    | [![PyPI](https://img.shields.io/pypi/v/sqlite-ulid.svg?color=blue&logo=python&logoColor=white)](https://pypi.org/project/sqlite-ulid/)                                                      |
+| Datasette      | `datasette install datasette-sqlite-ulid`                    | [![Datasette](https://img.shields.io/pypi/v/datasette-sqlite-ulid.svg?color=B6B6D9&label=Datasette+plugin&logoColor=white&logo=python)](https://datasette.io/plugins/datasette-sqlite-ulid) |
+| Node.js        | `npm install sqlite-ulid`                                    | [![npm](https://img.shields.io/npm/v/sqlite-ulid.svg?color=green&logo=nodedotjs&logoColor=white)](https://www.npmjs.com/package/sqlite-ulid)                                                |
+| Deno           | [`deno.land/x/sqlite_ulid`](https://deno.land/x/sqlite_ulid) | [![deno.land/x release](https://img.shields.io/github/v/release/asg017/sqlite-ulid?color=fef8d2&include_prereleases&label=deno.land%2Fx&logo=deno)](https://deno.land/x/sqlite_ulid)        |
+| Ruby           | `gem install sqlite-ulid`                                    | ![Gem](https://img.shields.io/gem/v/sqlite-ulid?color=red&logo=rubygems&logoColor=white)                                                                                                    |
+| Github Release |                                                              | ![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/asg017/sqlite-ulid?color=lightgrey&include_prereleases&label=Github+release&logo=github)                      |
+
+<!--
+| Elixir         | [`hex.pm/packages/sqlite_ulid`](https://hex.pm/packages/sqlite_ulid) | [![Hex.pm](https://img.shields.io/hexpm/v/sqlite_ulid?color=purple&logo=elixir)](https://hex.pm/packages/sqlite_ulid)                                                                       |
+| Go             | `go get -u github.com/asg017/sqlite-ulid/bindings/go`               | [![Go Reference](https://pkg.go.dev/badge/github.com/asg017/sqlite-ulid/bindings/go.svg)](https://pkg.go.dev/github.com/asg017/sqlite-ulid/bindings/go)                                     |
+| Rust           | `cargo add sqlite-ulid`                                             | [![Crates.io](https://img.shields.io/crates/v/sqlite-ulid?logo=rust)](https://crates.io/crates/sqlite-ulid)                                                                                 |
+-->
 
 The [Releases page](https://github.com/asg017/sqlite-ulid/releases) contains pre-built binaries for Linux x86_64, MacOS, and Windows.
 
@@ -215,7 +228,7 @@ datasette data.db --load-extension ./ulid0
 
 ## Supporting
 
-I (Alex 👋🏼) spent a lot of time and energy on this project and [many other open source projects](https://github.com/asg017?tab=repositories&q=&type=&language=&sort=stargazers). If your company or organization uses this library (or you're feeling generous), then please [consider supporting my work](https://alexgarcia.xyz/work.html), or share this project with a friend!
+I (Alex 👋🏼) spent a lot of time and energy on this project and [many other open source projects](https://github.com/asg017?tab=repositories&q=&type=&language=&sort=stargazers). If your company or organization uses this library (or you're feeling generous), then please [consider supporting my work](https://alexgarcia.ulid/work.html), or share this project with a friend!
 
 ## See also
 
