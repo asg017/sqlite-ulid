@@ -31,7 +31,7 @@ const db = new sqlite3.Database(":memory:");
 db.loadExtension(sqlite_ulid.getLoadablePath());
 
 db.get("select ulid_version()", (err, row) => {
-  console.log(row); // {json_schema_version(): "v0.2.0"}
+  console.log(row); // {ulid_version(): "v0.2.0"}
 });
 ```
 

@@ -99,22 +99,74 @@ So `ulid_bytes()` is pretty fast, but returns an unreadable blob instead of a ni
 
 However, generating 1 million `ulid()` IDs in ~350ms is most likely "good enough" for most SQLite usecases.
 
-## Installing
+## Using with...
+
+In addition to pre-compiled loadable extensions, `sqlite-ulid` is distributed along with popular package managers for usage
 
 The [Releases page](https://github.com/asg017/sqlite-ulid/releases) contains pre-built binaries for Linux x86_64, MacOS, and Windows.
 
-For Python developers, there is a [`sqlite-ulid` Python package](https://pypi.org/package/sqlite-ulid/) you can install like so:
+### Python
+
+For Python developers, install the [`sqlite-ulid` package](https://pypi.org/package/sqlite-ulid/) with:
 
 ```
 pip install sqlite-ulid
 ```
 
+```python
+import sqlite3
+import sqlite_ulid
+db = sqlite3.connect(':memory:')
+db.enable_load_extension(True)
+sqlite_ulid.load(db)
+db.execute('select ulid()').fetchone()
+# ('01gr7gwc5aq22ycea6j8kxq4s9',)
+```
+
 See [`python/sqlite_ulid`](./python/sqlite_ulid/README.md) for more details.
 
-And for [Datasette](https://datasette.io/), use the [`datasette-sqlite-ulid` Datasette plugin](https://datasette.io/plugins/datasette-sqlite-ulid) that can be installed with:
+### Node.js
+
+For Node.js developers, install the [`sqlite-ulid` npm package](https://www.npmjs.com/package/sqlite-ulid) with:
 
 ```
-datasette install  datasette-sqlite-ulid
+npm install sqlite-ulid
+```
+
+```js
+import Database from "better-sqlite3";
+import * as sqlite_ulid from "sqlite-ulid";
+
+const db = new Database(":memory:");
+db.loadExtension(sqlite_ulid.getLoadablePath());
+```
+
+See [`npm/sqlite-ulid/README.md`](./npm/sqlite-ulid/README.md) for more details.
+
+### Deno
+
+For [Deno](https://deno.land/) developers, use the [deno.land/x/sqlite_ulid](https://deno.land/x/sqlite_ulid) module:
+
+```ts
+import { Database } from "https://deno.land/x/sqlite3@0.8.0/mod.ts";
+import * as sqlite_ulid from "https://deno.land/x/sqlite_ulid@v${VERSION}/mod.ts";
+
+const db = new Database(":memory:");
+
+db.enableLoadExtension = true;
+sqlite_ulid.load(db);
+
+const [version] = db.prepare("select ulid_version()").value<[string]>()!;
+
+console.log(version);
+```
+
+### Datasette
+
+And for [Datasette](https://datasette.io/), install the [`datasette-sqlite-ulid` plugin](https://datasette.io/plugins/datasette-sqlite-ulid) with:
+
+```
+datasette install datasette-sqlite-ulid
 ```
 
 See [`python/datasette_sqlite_ulid`](./python/datasette_sqlite_ulid/README.md) for more details.
