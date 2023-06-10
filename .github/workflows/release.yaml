@@ -185,15 +185,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download workflow artifacts
-        uses: actions/download-artifact@v2
-      - run: npm install tar-fs
-      - uses: actions/github-script@v6
+      - uses: actions/download-artifact@v2
+      - uses: asg017/upload-spm@main
+        id: upload-spm
         with:
+          name: sqlite-ulid
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const script = require('.github/workflows/upload.js')
-            await script({github, context})
+          platforms: |
+            linux-x86_64:     sqlite-ulid-ubuntu/*
+            macos-x86_64:     sqlite-ulid-macos/*
+            macos-aarch64:    sqlite-ulid-macos-arm/*
+            windows-x86_64:   sqlite-ulid-windows/*
   upload-deno:
     name: Upload Deno release assets
     needs:
@@ -311,7 +313,18 @@ jobs:
           gem push bindings/ruby/x64-mingw32.gem
         env:
           GEM_HOST_API_KEY: ${{ secrets.GEM_HOST_API_KEY }}
-  upload_pypi:
+  upload-crate:
+    runs-on: ubuntu-latest
+    needs: [upload-extensions]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+  upload-pypi:
     needs:
       [
         build-ubuntu-python,
