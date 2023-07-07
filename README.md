@@ -226,6 +226,20 @@ With [Datasette](https://datasette.io/), you should prefer the [`datasette-sqlit
 datasette data.db --load-extension ./ulid0
 ```
 
+For Go programs using the [`mattn/go-sqlite3` package](https://pkg.go.dev/github.com/mattn/go-sqlite3), you can load the extension like so:
+
+```go
+func init() {
+	sql.Register("sqlite3-ulid", &sqlite3.SQLiteDriver{
+		ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+			return conn.LoadExtension("./ulid0.so", "sqlite3_ulid_init")
+		},
+	})
+}
+```
+
+Then instead of using the "sqlite3" driver when opening your DB, use "sqlite3-ulid".
+
 ## Supporting
 
 I (Alex 👋🏼) spent a lot of time and energy on this project and [many other open source projects](https://github.com/asg017?tab=repositories&q=&type=&language=&sort=stargazers). If your company or organization uses this library (or you're feeling generous), then please [consider supporting my work](https://alexgarcia.ulid/work.html), or share this project with a friend!
