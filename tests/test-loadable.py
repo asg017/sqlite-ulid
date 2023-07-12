@@ -43,6 +43,7 @@ FUNCTIONS = [
   'ulid_datetime',
   'ulid_debug',
   'ulid_version',
+  'ulid_with_datetime',
   'ulid_with_prefix',
   
   
@@ -88,7 +89,14 @@ class TestUlid(unittest.TestCase):
   def test_ulid_with_prefix(self):
     ulid_with_prefix = lambda prefix: db.execute("select ulid_with_prefix(?)", [prefix]).fetchone()[0]
     self.assertEqual(len(ulid_with_prefix("abc")), 26+4)
-  
+
+  def test_ulid_with_datetime(self):
+    ulid_with_datetime = lambda datetime: db.execute("select ulid_with_datetime(?)", [datetime]).fetchone()[0]
+    ulid_datetime = lambda ulid: db.execute("select ulid_datetime(?)", [ulid]).fetchone()[0]
+
+    ulid = ulid_with_datetime("2023-01-26 19:50:09.428")
+    self.assertEqual(ulid_datetime(ulid), '2023-01-26 19:50:09.428')
+
   def test_ulid_datetime(self):
     ulid_datetime = lambda ulid: db.execute("select ulid_datetime(?)", [ulid]).fetchone()[0]
     self.assertEqual(ulid_datetime('01GMP2G8ZG6PMKWYVKS62TTA41'), '2022-12-19 20:51:46.288')
