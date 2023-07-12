@@ -5,6 +5,8 @@ use sqlite_loadable::prelude::*;
 use sqlite_loadable::{api, define_scalar_function, Error, Result};
 use ulid::Ulid;
 
+const DATETIME_FMT: &str = "%Y-%m-%d %H:%M:%S.%3f";
+
 // ulid_version() -> 'v0.1.0'
 pub fn ulid_version(context: *mut sqlite3_context, _values: &[*mut sqlite3_value]) -> Result<()> {
     api::result_text(context, format!("v{}", env!("CARGO_PKG_VERSION")))?;
@@ -59,8 +61,11 @@ pub fn ulid_with_datetime(
     values: &[*mut sqlite3_value],
 ) -> Result<()> {
     let string = api::value_text(values.get(0).expect("1st argument required"))?;
-    let datetime = NaiveDateTime::parse_from_str(string, "%Y-%m-%d %H:%M:%S.%3f")
-        .map_err(|e| Error::new_message(format!("error parsing date and time: {e}").as_str()))?;
+    let datetime = NaiveDateTime::parse_from_str(string, DATETIME_FMT).map_err(|e| {
+        Error::new_message(
+            format!("error parsing date and time using format '{DATETIME_FMT}': {e}").as_str(),
+        )
+    })?;
 
     let millis = datetime
         .timestamp_millis()
@@ -143,7 +148,7 @@ pub fn ulid_datetime(context: *mut sqlite3_context, values: &[*mut sqlite3_value
         })?;
 
     match NaiveDateTime::from_timestamp_millis(ms) {
-        Some(dt) => api::result_text(context, dt.format("%Y-%m-%d %H:%M:%S.%3f").to_string())?,
+        Some(dt) => api::result_text(context, dt.format(DATETIME_FMT).to_string())?,
         None => return Err(Error::new_message("timestamp overflow")),
     };
     Ok(())
