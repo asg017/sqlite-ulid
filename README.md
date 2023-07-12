@@ -12,6 +12,7 @@ If your company or organization finds this library useful, consider [supporting 
 select ulid(); -- '01gqr4j69cc7w1xdbarkcbpq17'
 select ulid_bytes(); -- X'0185310899dd7662b8f1e5adf9a5e7c0'
 select ulid_with_prefix('invoice'); -- 'invoice_01gqr4jmhxhc92x1kqkpxb8j16'
+select ulid_with_datetime('2023-01-26 22:53:20.556); -- '01gqr4j69cc7w1xdbarkcbpq17'
 select ulid_datetime('01gqr4j69cc7w1xdbarkcbpq17') -- '2023-01-26 22:53:20.556'
 ```
 
