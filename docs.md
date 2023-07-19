@@ -60,6 +60,14 @@ select ulid_with_prefix('cus'); -- 'cus_01gqre97xwey5jd694tkg3ncg9'
 select ulid_with_prefix('card'); -- 'card_01gqre9c6az7835tdk00wc0gfp'
 ```
 
+<h3 name="ulid_with_datetime"><code>ulid_with_datetime(datetime)</code></h3>
+
+Generates a new ULID string based on the `datetime`. This can be helpful for giving ULIDs to elements that already have a created time property. The input `datetime` should be in the `YYYY-MM-DD HH:MM:SS.SSS` format.
+
+```sql
+select ulid_datetime('2023-01-20 20:00:00.400'); -- '01GQ8C8FWG0W1B5H3W5304049S'
+```
+
 <h3 name="ulid_datetime"><code>ulid_datetime(ulid)</code></h3>
 
 Extract the timestamp component from the given ULID. The `ulid` parameter can be a string from the [`ulid()`](#ulid) function, a string from the [`ulid_with_prefix()`](#ulid_with_prefix) function, or a blob from the [`ulid_bytes`](#ulid_bytes) function. Returns a text timestamp with `YYYY-MM-DD HH:MM:SS.SSS` format, which can be used with the builtin [`datetime()`](https://www.sqlite.org/lang_datefunc.html) function.

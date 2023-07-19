@@ -1,9 +1,11 @@
-use std::time::SystemTime;
+use std::time::{Duration, SystemTime};
 
 use sqlite_loadable::api::ValueType;
 use sqlite_loadable::prelude::*;
 use sqlite_loadable::{api, define_scalar_function, Error, Result};
 use ulid::Ulid;
+
+const DATETIME_FMT: &str = "%Y-%m-%d %H:%M:%S.%3f";
 
 // ulid_version() -> 'v0.1.0'
 pub fn ulid_version(context: *mut sqlite3_context, _values: &[*mut sqlite3_value]) -> Result<()> {
@@ -49,6 +51,34 @@ pub fn ulid_with_prefix(
     api::result_text(
         context,
         format!("{prefix}_{}", Ulid::new().to_string()).to_lowercase(),
+    )?;
+    Ok(())
+}
+
+// ulid_with_datetime('2023-01-26 19:50:09.428') -> '01gqqt2rrmg5p7d2e6dj81sccf'
+pub fn ulid_with_datetime(
+    context: *mut sqlite3_context,
+    values: &[*mut sqlite3_value],
+) -> Result<()> {
+    let string = api::value_text(values.get(0).expect("1st argument required"))?;
+    let datetime = NaiveDateTime::parse_from_str(string, DATETIME_FMT).map_err(|e| {
+        Error::new_message(
+            format!("error parsing date and time using format '{DATETIME_FMT}': {e}").as_str(),
+        )
+    })?;
+
+    let millis = datetime
+        .timestamp_millis()
+        .try_into()
+        .expect("milliseconds to be positive");
+    let duration = Duration::from_millis(millis);
+    let datetime = SystemTime::UNIX_EPOCH
+        .checked_add(duration)
+        .expect("milliseconds to be valid");
+
+    api::result_text(
+        context,
+        Ulid::from_datetime(datetime).to_string().to_lowercase(),
     )?;
     Ok(())
 }
@@ -118,7 +148,7 @@ pub fn ulid_datetime(context: *mut sqlite3_context, values: &[*mut sqlite3_value
         })?;
 
     match NaiveDateTime::from_timestamp_millis(ms) {
-        Some(dt) => api::result_text(context, dt.format("%Y-%m-%d %H:%M:%S.%3f").to_string())?,
+        Some(dt) => api::result_text(context, dt.format(DATETIME_FMT).to_string())?,
         None => return Err(Error::new_message("timestamp overflow")),
     };
     Ok(())
@@ -152,6 +182,13 @@ pub fn sqlite3_ulid_init(db: *mut sqlite3) -> Result<()> {
         "ulid_with_prefix",
         1,
         ulid_with_prefix,
+        FunctionFlags::UTF8,
+    )?;
+    define_scalar_function(
+        db,
+        "ulid_with_datetime",
+        1,
+        ulid_with_datetime,
         FunctionFlags::UTF8,
     )?;
     define_scalar_function(
