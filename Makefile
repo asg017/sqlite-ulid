@@ -29,8 +29,8 @@ prefix=dist
 TARGET_LOADABLE=$(prefix)/debug/ulid0.$(LOADABLE_EXTENSION)
 TARGET_LOADABLE_RELEASE=$(prefix)/release/ulid0.$(LOADABLE_EXTENSION)
 
-TARGET_STATIC=$(prefix)/debug/ulid0.a
-TARGET_STATIC_RELEASE=$(prefix)/release/ulid0.a
+TARGET_STATIC=$(prefix)/debug/sqlite_ulid0.a
+TARGET_STATIC_RELEASE=$(prefix)/release/sqlite_ulid0.a
 
 TARGET_WHEELS=$(prefix)/debug/wheels
 TARGET_WHEELS_RELEASE=$(prefix)/release/wheels
@@ -41,10 +41,14 @@ ifdef target
 CARGO_TARGET=--target=$(target)
 BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
+BUILT_LOCATION_STATIC=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.a
+BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.a
 else
 CARGO_TARGET=
 BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
+BUILT_LOCATION_STATIC=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.a
+BUILT_LOCATION_STATIC_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.a
 endif
 
 ifdef python
@@ -76,6 +80,14 @@ $(TARGET_LOADABLE): $(prefix) $(shell find . -type f -name '*.rs')
 $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build --release $(CARGO_TARGET)
 	cp $(BUILT_LOCATION_RELEASE) $@
+
+$(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
+	cargo build $(CARGO_TARGET)
+	cp $(BUILT_LOCATION_STATIC) $@
+
+$(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
+	cargo build --release $(CARGO_TARGET)
+	cp $(BUILT_LOCATION_STATIC_RELEASE) $@
 
 python: $(TARGET_WHEELS) $(TARGET_LOADABLE) python/sqlite_ulid/setup.py python/sqlite_ulid/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
 	cp $(TARGET_LOADABLE) $(INTERMEDIATE_PYPACKAGE_EXTENSION)
@@ -117,6 +129,11 @@ bindings/ruby/lib/version.rb: bindings/ruby/lib/version.rb.tmpl VERSION
 
 ruby: bindings/ruby/lib/version.rb
 
+bindings/go/ulid/sqlite-ulid.h: sqlite-ulid.h
+	cp $< $@
+
+go: bindings/go/ulid/sqlite-ulid.h
+
 version:
 	make Cargo.toml
 	make python/sqlite_ulid/sqlite_ulid/version.py
@@ -127,9 +144,6 @@ version:
 
 format:
 	cargo fmt
-
-sqlite-ulid.h: cbindgen.toml
-	rustup run nightly cbindgen  --config $< -o $@
 
 release: $(TARGET_LOADABLE_RELEASE) $(TARGET_STATIC_RELEASE)
 
@@ -175,4 +189,4 @@ publish-release:
 	static static-release \
 	debug release \
 	format version publish-release \
-	npm deno ruby
+	npm deno ruby go
