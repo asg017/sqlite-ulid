@@ -241,6 +241,8 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable static
+      - run: ls -lah dist/debug
+      - run: ls -lah target/debug
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -325,6 +327,7 @@ jobs:
       - run: echo "${{ github.workspace }}\dist\debug" >> $GITHUB_PATH
       - run: ls ${{ github.workspace }}\dist\debug
       - run: ls ${{ github.workspace }}\sqlite
+      - run: echo $env:PATH
       - run: go run demo.go
         working-directory: examples/go
         env:
