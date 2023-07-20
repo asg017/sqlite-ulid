@@ -322,9 +322,9 @@ jobs:
           curl -LO https://www.sqlite.org/2023/sqlite-amalgamation-3420000.zip
           unzip sqlite-amalgamation-3420000.zip
           mv sqlite-amalgamation-3420000/* .
-      - run: echo "##[add-to-path]${{ github.workspace }}/dist/debug"
-      - run: ls ${{ github.workspace }}/dist/debug
-      - run: ls ${{ github.workspace }}/sqlite
+      - run: echo "${{ github.workspace }}\dist\debug" >> $GITHUB_PATH
+      - run: ls ${{ github.workspace }}\dist\debug
+      - run: ls ${{ github.workspace }}\sqlite
       - run: go run demo.go
         working-directory: examples/go
         env:
