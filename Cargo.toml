@@ -16,3 +16,10 @@ chrono = "0.4.23"
 
 [lib]
 crate-type=["lib", "staticlib", "cdylib"]
+
+# temp to try fix windows static builds
+[profile.release]
+panic = "abort"
+
+[profile.dev]
+panic = "abort"
