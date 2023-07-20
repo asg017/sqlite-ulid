@@ -83,7 +83,7 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 
 $(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build $(CARGO_TARGET)
-	find target/debug
+	ls -lah target/debug
 	cp $(BUILT_LOCATION_STATIC) $@
 
 $(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
