@@ -23,7 +23,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make loadable-release
+      - run: make loadable-release static-release
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -64,7 +64,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make loadable-release
+      - run: make loadable-release static-release
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -106,7 +106,7 @@ jobs:
         with:
           toolchain: stable
       - run: rustup target add aarch64-apple-darwin
-      - run: make loadable-release target=aarch64-apple-darwin
+      - run: make loadable-release static-release target=aarch64-apple-darwin
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -147,7 +147,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make loadable-release
+      - run: make loadable-release static-release
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -267,12 +267,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   upload-gem:
-    needs: [
-      build-macos-extension,
-      build-macos-arm-extension,
-      build-ubuntu-extension,
-      build-windows-extension,
-    ]
+    needs:
+      [
+        build-macos-extension,
+        build-macos-arm-extension,
+        build-ubuntu-extension,
+        build-windows-extension,
+      ]
     permissions:
       contents: write
     runs-on: ubuntu-latest

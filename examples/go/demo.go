@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// #cgo LDFLAGS: -L../../dist/debug
+// #cgo amd64 LDFLAGS: -framework CoreFoundation
 import "C"
 
 func main() {
@@ -19,13 +19,11 @@ func main() {
 	}
 	defer db.Close()
 
-	var hello string
-	var hola string
-	err = db.QueryRow("select hello('alex'), hola('alex')").Scan(&hello, &hola)
+	var ulid string
+	err = db.QueryRow("select ulid()").Scan(&ulid)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("hello result: %s\n", hello)
-	fmt.Printf("hola result: %s\n", hola)
+	fmt.Printf("ulid: %s\n", ulid)
 }

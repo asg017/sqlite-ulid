@@ -29,8 +29,8 @@ prefix=dist
 TARGET_LOADABLE=$(prefix)/debug/ulid0.$(LOADABLE_EXTENSION)
 TARGET_LOADABLE_RELEASE=$(prefix)/release/ulid0.$(LOADABLE_EXTENSION)
 
-TARGET_STATIC=$(prefix)/debug/sqlite_ulid0.a
-TARGET_STATIC_RELEASE=$(prefix)/release/sqlite_ulid0.a
+TARGET_STATIC=$(prefix)/debug/libsqlite_ulid0.a
+TARGET_STATIC_RELEASE=$(prefix)/release/libsqlite_ulid0.a
 
 TARGET_WHEELS=$(prefix)/debug/wheels
 TARGET_WHEELS_RELEASE=$(prefix)/release/wheels
