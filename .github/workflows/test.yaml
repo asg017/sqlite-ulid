@@ -241,8 +241,8 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable static
-      - run: ls -lah dist/debug
-      - run: ls -lah target/debug
+      - run: ls dist/debug
+      - run: ls target/debug
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
