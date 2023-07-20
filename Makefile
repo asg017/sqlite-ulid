@@ -41,14 +41,14 @@ ifdef target
 CARGO_TARGET=--target=$(target)
 BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.a
-BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.a
+BUILT_LOCATION_STATIC=target/$(target)/debug/libsqlite_ulid.a
+BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/libsqlite_ulid.a
 else
 CARGO_TARGET=
 BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.a
-BUILT_LOCATION_STATIC_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.a
+BUILT_LOCATION_STATIC=target/debug/libsqlite_ulid.a
+BUILT_LOCATION_STATIC_RELEASE=target/release/libsqlite_ulid.a
 endif
 
 ifdef python

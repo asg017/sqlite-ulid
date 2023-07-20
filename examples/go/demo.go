@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// #cgo amd64 LDFLAGS: -framework CoreFoundation
+// #cgo darwin,amd64 LDFLAGS: -framework CoreFoundation
 import "C"
 
 func main() {

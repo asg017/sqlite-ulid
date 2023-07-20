@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-ubuntu
-          path: dist/debug/ulid0.so
+          path: dist/debug/*
   build-ubuntu-python:
     runs-on: ubuntu-20.04
     needs: [build-ubuntu-extension]
@@ -115,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos
-          path: dist/debug/ulid0.dylib
+          path: dist/debug/*
   build-macos-python:
     runs-on: macos-latest
     needs: [build-macos-extension]
@@ -204,7 +204,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-macos-arm
-          path: dist/debug/ulid0.dylib
+          path: dist/debug/*
   build-macos-arm-python:
     runs-on: macos-latest
     needs: [build-macos-arm-extension]
@@ -245,7 +245,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-windows
-          path: dist/debug/ulid0.dll
+          path: dist/debug/*
   build-windows-python:
     runs-on: windows-latest
     needs: [build-windows-extension]
