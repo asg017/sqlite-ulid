@@ -331,7 +331,7 @@ jobs:
       - run: go run demo.go
         working-directory: examples/go
         env:
-          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug -lole32 -lbcrypt -lws2_32 -luserenv -lntdll
+          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug
           CGO_CFLAGS: -I${{ github.workspace }}\sqlite
   upload_test_pypi:
     if: ${{ contains(github.event.head_commit.message, '@test_pypi') }}
