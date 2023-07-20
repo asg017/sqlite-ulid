@@ -241,6 +241,8 @@ jobs:
         with:
           toolchain: stable
       - run: make loadable static
+        env:
+          RUSTFLAGS: "--print=native-static-libs"
       - run: ls dist/debug
       - run: ls target/debug
       - name: Upload artifacts
