@@ -13,16 +13,19 @@ endif
 LIBRARY_PREFIX=lib
 ifdef CONFIG_DARWIN
 LOADABLE_EXTENSION=dylib
+STATIC_EXTENSION=a
 endif
 
 ifdef CONFIG_LINUX
 LOADABLE_EXTENSION=so
+STATIC_EXTENSION=a
 endif
 
 
 ifdef CONFIG_WINDOWS
 LOADABLE_EXTENSION=dll
 LIBRARY_PREFIX=
+STATIC_EXTENSION=dll
 endif
 
 prefix=dist
@@ -41,14 +44,14 @@ ifdef target
 CARGO_TARGET=--target=$(target)
 BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/$(target)/debug/libsqlite_ulid.a
-BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/libsqlite_ulid.a
+BUILT_LOCATION_STATIC=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
 else
 CARGO_TARGET=
 BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/debug/libsqlite_ulid.a
-BUILT_LOCATION_STATIC_RELEASE=target/release/libsqlite_ulid.a
+BUILT_LOCATION_STATIC=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
 endif
 
 ifdef python
@@ -83,7 +86,6 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 
 $(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build $(CARGO_TARGET)
-	ls -lah target/debug
 	cp $(BUILT_LOCATION_STATIC) $@
 
 $(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
