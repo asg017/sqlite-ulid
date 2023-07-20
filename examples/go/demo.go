@@ -10,7 +10,7 @@ import (
 )
 
 // #cgo darwin,amd64 LDFLAGS: -framework CoreFoundation
-// #cgo windows LDFLAGS: -lbcrypt -ladvapi32 -lkernel32 -ladvapi32 -ladvapi32 -lbcrypt -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lntdll -lntdll -lntdll -lntdll -luserenv -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lkernel32 -lkernel32 -lgdi32 -lmsvcrt -lwinmm
+// #cgo windows LDFLAGS: -lbcrypt -lkernel32 -lntdll -luserenv -lws2_32 -lgdi32 -lmsvcrt -lwinmm -lcrypt32 -lSecur32 -lcrypt32
 import "C"
 
 func main() {
