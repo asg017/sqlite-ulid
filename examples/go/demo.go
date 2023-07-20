@@ -10,7 +10,7 @@ import (
 )
 
 // #cgo darwin,amd64 LDFLAGS: -framework CoreFoundation
-// #cgo windows LDFLAGS: -lwinapi_advapi32 -lwinapi_kernel32 -lbcrypt -ladvapi32 -lkernel32 -lntdll -luserenv -lws2_32
+// #cgo windows LDFLAGS: -lbcrypt -ladvapi32 -lkernel32 -lntdll -luserenv -lws2_32
 import "C"
 
 func main() {
