@@ -240,8 +240,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: x86_64-pc-windows-gnu
-      - run: make loadable static
+      - run: make loadable static target=x86_64-pc-windows-gnu
         env:
           RUSTFLAGS: "--print=native-static-libs"
       - run: ls dist/debug
