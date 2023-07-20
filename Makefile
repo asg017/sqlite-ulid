@@ -25,7 +25,7 @@ endif
 ifdef CONFIG_WINDOWS
 LOADABLE_EXTENSION=dll
 LIBRARY_PREFIX=
-STATIC_EXTENSION=lib
+STATIC_EXTENSION=a
 endif
 
 prefix=dist
@@ -44,14 +44,14 @@ ifdef target
 CARGO_TARGET=--target=$(target)
 BUILT_LOCATION=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/$(target)/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
-BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC=target/$(target)/debug/libsqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC_RELEASE=target/$(target)/release/libsqlite_ulid.$(STATIC_EXTENSION)
 else
 CARGO_TARGET=
 BUILT_LOCATION=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
 BUILT_LOCATION_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(LOADABLE_EXTENSION)
-BUILT_LOCATION_STATIC=target/debug/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
-BUILT_LOCATION_STATIC_RELEASE=target/release/$(LIBRARY_PREFIX)sqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC=target/debug/libsqlite_ulid.$(STATIC_EXTENSION)
+BUILT_LOCATION_STATIC_RELEASE=target/release/libsqlite_ulid.$(STATIC_EXTENSION)
 endif
 
 ifdef python
