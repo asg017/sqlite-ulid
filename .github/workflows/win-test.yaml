@@ -16,4 +16,5 @@ jobs:
   t1:
     runs-on: windows-latest
     steps:
-      - run: which gcc
+      - run: gcc --help
+      - run: x86_64-w64-mingw32-gcc --help
