@@ -7,7 +7,6 @@ permissions:
   contents: read
 jobs:
   debug:
-    name: Building ubuntu
-    runs-on: windows=latest
+    runs-on: windows-latest
     steps:
       - run: dir /s C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\lib
