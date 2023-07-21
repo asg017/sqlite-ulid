@@ -35,6 +35,9 @@ TARGET_LOADABLE_RELEASE=$(prefix)/release/ulid0.$(LOADABLE_EXTENSION)
 TARGET_STATIC=$(prefix)/debug/libsqlite_ulid0.$(STATIC_EXTENSION)
 TARGET_STATIC_RELEASE=$(prefix)/release/libsqlite_ulid0.$(STATIC_EXTENSION)
 
+TARGET_H=$(prefix)/debug/sqlite-ulid.h
+TARGET_H_RELEASE=$(prefix)/release/sqlite-ulid.h
+
 TARGET_WHEELS=$(prefix)/debug/wheels
 TARGET_WHEELS_RELEASE=$(prefix)/release/wheels
 
@@ -93,6 +96,12 @@ $(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
 $(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 	cargo build --release $(CARGO_TARGET)
 	cp $(BUILT_LOCATION_STATIC_RELEASE) $@
+
+$(TARGET_H): sqlite-ulid.h
+	cp $< $@
+
+$(TARGET_H_RELEASE): sqlite-ulid.h
+	cp $< $@
 
 python: $(TARGET_WHEELS) $(TARGET_LOADABLE) python/sqlite_ulid/setup.py python/sqlite_ulid/sqlite_ulid/__init__.py .github/workflows/rename-wheels.py
 	cp $(TARGET_LOADABLE) $(INTERMEDIATE_PYPACKAGE_EXTENSION)
@@ -155,8 +164,8 @@ release: $(TARGET_LOADABLE_RELEASE) $(TARGET_STATIC_RELEASE)
 loadable: $(TARGET_LOADABLE)
 loadable-release: $(TARGET_LOADABLE_RELEASE)
 
-static: $(TARGET_STATIC)
-static-release: $(TARGET_STATIC_RELEASE)
+static: $(TARGET_STATIC) $(TARGET_H)
+static-release: $(TARGET_STATIC_RELEASE) $(TARGET_H_RELEASE)
 
 debug: loadable static python datasette
 release: loadable-release static-release python-release datasette-release

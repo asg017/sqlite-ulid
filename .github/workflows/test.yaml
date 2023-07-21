@@ -310,6 +310,42 @@ jobs:
       - run: make test-deno
         env:
           DENO_SQLITE_ULID_PATH: ${{ github.workspace }}/dist/debug/ulid0
+  test-macos-c:
+    runs-on: windows-latest
+    needs: [build-macos-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-macos
+          path: dist/debug/
+      - run: make demo
+        working-directory: examples/c
+      - run: examples/c/demo
+  test-ubuntu-c:
+    runs-on: ubuntu-20.04
+    needs: [build-ubuntu-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-ubuntu
+          path: dist/debug/
+      - run: make demo
+        working-directory: examples/c
+      - run: examples/c/demo
+  test-windows-c:
+    runs-on: windows-latest
+    needs: [build-windows-extension]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: sqlite-ulid-windows
+          path: dist/debug/
+      - run: make demo
+        working-directory: examples/c
+      - run: examples/c/demo
   test-windows-go:
     runs-on: windows-latest
     needs: [build-windows-extension]
@@ -329,41 +365,14 @@ jobs:
       - run: echo "${{ github.workspace }}\dist\debug" >> $GITHUB_PATH
       - run: ls ${{ github.workspace }}\dist\debug
       - run: ls ${{ github.workspace }}\sqlite
-      - uses: msys2/setup-msys2@v2
-        with:
-          install: mingw-w64-x86_64-go mingw-w64-x86_64-make mingw-w64-x86_64-rust mingw-w64-x86_64-gcc
-
+      #- uses: msys2/setup-msys2@v2
+      #  with:
+      #    install: mingw-w64-x86_64-go mingw-w64-x86_64-make mingw-w64-x86_64-rust mingw-w64-x86_64-gcc
       - run: echo $env:PATH
       - run: go run demo.go
         working-directory: examples/go
         env:
-          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug -lbcrypt -ladvapi32 -lkernel32 -ladvapi32 -ladvapi32 -lbcrypt -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lkernel32 -lntdll -lntdll -lntdll -lntdll -luserenv -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lws2_32 -lkernel32 -lkernel32
+          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug
           CGO_CFLAGS: -I${{ github.workspace }}\sqlite
           CGO_ENABLED: 1
           CC: x86_64-w64-mingw32-gcc
-  upload_test_pypi:
-    if: ${{ contains(github.event.head_commit.message, '@test_pypi') }}
-    needs: [test-ubuntu, test-macos, test-windows, build-macos-arm-python]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-windows-wheels
-          path: dist
-      - uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-ubuntu-wheels
-          path: dist
-      - uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-macos-wheels
-          path: dist
-      - uses: actions/download-artifact@v3
-        with:
-          name: sqlite-ulid-macos-arm-wheels
-          path: dist
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
