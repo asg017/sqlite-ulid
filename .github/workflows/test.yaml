@@ -311,7 +311,7 @@ jobs:
         env:
           DENO_SQLITE_ULID_PATH: ${{ github.workspace }}/dist/debug/ulid0
   test-macos-c:
-    runs-on: windows-latest
+    runs-on: macos-latest
     needs: [build-macos-extension]
     steps:
       - uses: actions/checkout@v3
@@ -332,7 +332,7 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/
-      - run: make demo CFLAGS=-pthread
+      - run: make demo CFLAGS="-pthread -ldl"
         working-directory: examples/c
       - run: examples/c/demo
   test-windows-c:
