@@ -381,7 +381,7 @@ jobs:
       - run: go run demo.go
         working-directory: examples/go
         env:
-          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug
+          CGO_LDFLAGS: -L${{ github.workspace }}\dist\debug -LC:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\lib
           CGO_CFLAGS: -I${{ github.workspace }}\sqlite
           CGO_ENABLED: 1
           CC: x86_64-w64-mingw32-gcc
