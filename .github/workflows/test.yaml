@@ -319,6 +319,7 @@ jobs:
         with:
           name: sqlite-ulid-macos
           path: dist/debug/
+      - run: brew install sqlite
       - run: make demo
         working-directory: examples/c
       - run: examples/c/demo
@@ -331,7 +332,7 @@ jobs:
         with:
           name: sqlite-ulid-ubuntu
           path: dist/debug/
-      - run: make demo
+      - run: make demo CFLAGS=-pthread
         working-directory: examples/c
       - run: examples/c/demo
   test-windows-c:
