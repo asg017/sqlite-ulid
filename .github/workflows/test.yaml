@@ -240,6 +240,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - run: rustup set default-host x86_64-pc-windows-gnu
       - run: make loadable static target=x86_64-pc-windows-gnu
         env:
           RUSTFLAGS: "--print=native-static-libs --print=link-args"
