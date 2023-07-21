@@ -9,4 +9,8 @@ jobs:
   debug:
     runs-on: windows-latest
     steps:
-      - run: dir /s C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\lib
+      - run: dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\lib
+  t1:
+    runs-on: windows-latest
+    steps:
+      - run: which gcc
