@@ -344,7 +344,15 @@ jobs:
         with:
           name: sqlite-ulid-windows
           path: dist/debug/
-      - run: make demo
+      - run: |
+          mkdir -p ${{ github.workspace }}/sqlite
+          cd ${{ github.workspace }}/sqlite
+          curl -LO https://www.sqlite.org/2023/sqlite-amalgamation-3420000.zip
+          unzip sqlite-amalgamation-3420000.zip
+          mv sqlite-amalgamation-3420000/* .
+          curl -LO https://www.sqlite.org/2023/sqlite-tools-linux-x86-3420000.zip
+          unzip sqlite-tools-linux-x86-3420000.zip
+      - run: make demo CFLAGS="-I${{ github.workspace }}\sqlite -L${{ github.workspace }}\sqlite"
         working-directory: examples/c
       - run: examples/c/demo
   test-windows-go:
