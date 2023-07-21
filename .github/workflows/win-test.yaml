@@ -12,6 +12,7 @@ jobs:
       - run: dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\lib
       - run: dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\include
       - run: cat C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32\include\bcrypt.h
+      - run: dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\x86_64-w64-mingw32
   t1:
     runs-on: windows-latest
     steps:
