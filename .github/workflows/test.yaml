@@ -250,10 +250,6 @@ jobs:
           RUSTFLAGS: "--print=native-static-libs --print=link-args"
       - run: ls dist/debug
       - run: ls target/debug
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -383,6 +379,10 @@ jobs:
       - run: echo "${{ github.workspace }}\dist\debug" >> $GITHUB_PATH
       - run: ls ${{ github.workspace }}\dist\debug
       - run: ls ${{ github.workspace }}\sqlite
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
       - run: go run demo.go
         working-directory: examples/go
         env:
