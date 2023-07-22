@@ -17,5 +17,9 @@ jobs:
   t1:
     runs-on: windows-latest
     steps:
-      - run: gcc --help
-      - run: x86_64-w64-mingw32-gcc --help
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: dir C:\\Users\\runneradmin\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib
+      - run: dir C:\\Users\\runneradmin\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\x86_64-pc-windows-gnu\\include
+      - run: dir C:\\Users\\runneradmin\\.rustup\\toolchains\\
