@@ -242,6 +242,7 @@ jobs:
           toolchain: 1.67.0
           override: true
           default: true
+      - run: rustup target add x86_64-pc-windows-gnu
       - run: rustup set default-host x86_64-pc-windows-gnu
       - run: cargo --version
       - run: make loadable static target=x86_64-pc-windows-gnu
