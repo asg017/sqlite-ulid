@@ -80,21 +80,21 @@ $(TARGET_WHEELS_RELEASE): $(prefix)
 	mkdir -p $(TARGET_WHEELS_RELEASE)
 
 $(TARGET_LOADABLE): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build $(CARGO_TARGET)
+	cargo build --verbose $(CARGO_TARGET)
 	cp $(BUILT_LOCATION) $@
 
 $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build --release $(CARGO_TARGET)
+	cargo build --verbose --release $(CARGO_TARGET)
 	cp $(BUILT_LOCATION_RELEASE) $@
 
 $(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build $(CARGO_TARGET)
+	cargo build --verbose $(CARGO_TARGET)
 	ls target
 	ls target/$(target)/debug
 	cp $(BUILT_LOCATION_STATIC) $@
 
 $(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build --release $(CARGO_TARGET)
+	cargo build --verbose --release $(CARGO_TARGET)
 	cp $(BUILT_LOCATION_STATIC_RELEASE) $@
 
 $(TARGET_H): sqlite-ulid.h
