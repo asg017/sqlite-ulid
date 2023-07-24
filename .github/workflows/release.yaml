@@ -181,7 +181,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: sqlite-ulid-datasette-sqlite-utils-wheels
-          path: dist/wheels/*.whl
+          path: dist/release/wheels/*.whl
   upload-extensions:
     name: Upload release assets
     needs:
