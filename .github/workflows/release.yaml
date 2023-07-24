@@ -147,7 +147,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: make loadable-release static-release
+      - run: make loadable-release static-release target=x86_64-pc-windows-gnu
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
