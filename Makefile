@@ -88,13 +88,13 @@ $(TARGET_LOADABLE_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
 	cp $(BUILT_LOCATION_RELEASE) $@
 
 $(TARGET_STATIC): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build --verbose $(CARGO_TARGET)
+	cargo build --verbose $(CARGO_TARGET) --features=sqlite-loadable/static
 	ls target
 	ls target/$(target)/debug
 	cp $(BUILT_LOCATION_STATIC) $@
 
 $(TARGET_STATIC_RELEASE): $(prefix) $(shell find . -type f -name '*.rs')
-	cargo build --verbose --release $(CARGO_TARGET)
+	cargo build --verbose --release $(CARGO_TARGET) --features=sqlite-loadable/static
 	cp $(BUILT_LOCATION_STATIC_RELEASE) $@
 
 $(TARGET_H): sqlite-ulid.h
